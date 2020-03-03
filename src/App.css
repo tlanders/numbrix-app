@@ -2,9 +2,19 @@
   text-align: center;
 }
 
-button.numbrix-cell {
+div.numbrix-status {
+  margin-bottom: 20px;
+}
+
+button.numbrix-cell, input.numbrix-cell {
   height: 50px;
   width: 50px;
+  text-align: center;
+}
+
+button.status-btn {
+  margin: 0px 10px 10px 10px;
+  padding: 5px;
 }
 
 .App-logo {
