@@ -1,24 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="numbrix">
+        <div className="numbrix-row">
+          <button className="numbrix-cell">0</button>
+          <button className="numbrix-cell">1</button>
+          <button className="numbrix-cell">2</button>
+          <button className="numbrix-cell">3</button>
+        </div>
+        <div className="numbrix-row">
+          <button className="numbrix-cell">0</button>
+          <button className="numbrix-cell">1</button>
+          <button className="numbrix-cell">2</button>
+          <button className="numbrix-cell">3</button>
+        </div>
+        <div className="numbrix-row">
+          <button className="numbrix-cell">0</button>
+          <button className="numbrix-cell">1</button>
+          <button className="numbrix-cell">2</button>
+          <button className="numbrix-cell">3</button>
+        </div>
+        <div className="numbrix-row">
+          <button className="numbrix-cell">0</button>
+          <button className="numbrix-cell">1</button>
+          <button className="numbrix-cell">2</button>
+          <button className="numbrix-cell">3</button>
+        </div>
+      </div>
     </div>
   );
 }
