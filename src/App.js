@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import Cell from "./components/Cell";
 
 function App() {
   return (
@@ -12,10 +13,10 @@ function App() {
           <button className="status-btn">Check Board</button>
         </div>
         <div className="numbrix-row">
-          <input className="numbrix-cell" type="text" value={0}/>
-          <input className="numbrix-cell" type="text" value={1}/>
-          <input className="numbrix-cell" type="text" value={2}/>
-          <input className="numbrix-cell" type="text" value={3}/>
+          <Cell value={0}/>
+          <Cell value={1}/>
+          <Cell value={2}/>
+          <Cell value={3}/>
         </div>
         <div className="numbrix-row">
           <input className="numbrix-cell" type="text" value={0}/>
