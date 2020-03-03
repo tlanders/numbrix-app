@@ -4,12 +4,17 @@ class Cell extends Component {
     constructor(props) {
         super(props);
         this.state = {value:props.value};
+        this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
         return (
-            <input className="numbrix-cell" type="text" value={this.state.value}/>
+            <input onChange={this.handleChange} className="numbrix-cell" type="text" value={this.state.value}/>
         );
+    }
+
+    handleChange(event) {
+        this.setState({value:event.target.value});
     }
 }
 
