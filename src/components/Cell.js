@@ -14,7 +14,10 @@ class Cell extends Component {
     }
 
     handleChange(event) {
-        this.setState({value:event.target.value});
+        const theVal = event.target.value;
+        if(Number.isInteger(theVal)) {
+            this.setState({value: event.target.value});
+        }
     }
 }
 
