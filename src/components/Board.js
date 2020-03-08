@@ -31,39 +31,34 @@ class Board extends Component {
     }
 
     render() {
+        const rows = []
+        for(var i = 0; i < this.state.width; i++) {
+            rows.push(this.renderRow(i));
+        }
         return (
             <div className="numbrix">
                 <Status onClearClick={this.handleClearClick}/>
 
                 <div className="numbrix-board">
-                    <div className="numbrix-row">
-                        {this.renderCell(0)}
-                        {this.renderCell(1)}
-                        {this.renderCell(2)}
-                        {this.renderCell(3)}
-                    </div>
-                    <div className="numbrix-row">
-                        <Cell/>
-                        <Cell/>
-                        <Cell/>
-                        <Cell/>
-                    </div>
-                    <div className="numbrix-row">
-                        <Cell/>
-                        <Cell/>
-                        <Cell/>
-                        <Cell/>
-                    </div>
-                    <div className="numbrix-row">
-                        <Cell/>
-                        <Cell/>
-                        <Cell/>
-                        <Cell/>
-                    </div>
+                    {rows}
                 </div>
             </div>
         );
     }
+
+    renderRow(rowNum) {
+        const cells = [];
+        for(var i = 0; i < this.state.width; i++) {
+            const k = rowNum * this.state.width + i;
+            cells.push(<Cell key={k} value={this.state.cells[k]} onChange={(evt) => this.handleCellChange(k, evt)}/>)
+        }
+        return (
+            <div className="numbrix-row" key={rowNum}>
+                {cells}
+            </div>
+        );
+    }
 }
+
 
 export default Board;
