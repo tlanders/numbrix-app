@@ -5,15 +5,23 @@ class Board extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cells:Array(16).fill(null),
+            cells:Array(16).fill(''),
             width: 4
         };
+        this.handleCellChange = this.handleCellChange.bind(this);
     }
 
     renderCell(i) {
         return (
-            <Cell value={this.state.cells[i]}/>
+            <Cell key={i} value={this.state.cells[i]} onChange={(evt) => this.handleCellChange(i, evt)}/>
         )
+    }
+
+    handleCellChange(i, event) {
+        console.log('onchange, key=' + i + ", val=" + event.target.value);
+        const cells = this.state.cells.slice();
+        cells[i] = event.target.value;
+        this.setState({cells:cells});
     }
 
     render() {
