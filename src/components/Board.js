@@ -22,7 +22,15 @@ class Board extends Component {
     handleCellChange(i, event) {
         console.log('onchange, key=' + i + ", val=" + event.target.value);
         const cells = this.state.cells.slice();
-        cells[i] = event.target.value;
+        let newVal = Number.parseInt(event.target.value);
+        if(isNaN(newVal)) {
+            newVal = '';
+            console.log('not num');
+        } else {
+            newVal = event.target.value;
+            console.log('is num');
+        }
+        cells[i] = newVal;
         this.setState({cells:cells});
     }
 
