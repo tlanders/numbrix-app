@@ -11,6 +11,8 @@ class Board extends Component {
         };
         this.handleCellChange = this.handleCellChange.bind(this);
         this.handleClearClick = this.handleClearClick.bind(this);
+        this.handleInitClick = this.handleInitClick.bind(this);
+        this.clearBoard = this.clearBoard.bind(this);
     }
 
     renderCell(i) {
@@ -34,8 +36,31 @@ class Board extends Component {
         this.setState({cells:cells});
     }
 
-    handleClearClick() {
+    clearBoard() {
         this.setState({cells:Array(16).fill('')});
+    }
+
+    handleInitClick(i, event) {
+        const cells = this.state.cells.slice();
+        const maxVal = this.state.width * 2;
+        let usedVals = [];
+        for(let cellIndex = 0; cellIndex < cells.length; cellIndex++) {
+            const cellVal = cells[cellIndex];
+            if(cellVal === '') {
+                continue;
+            } else if(cellVal > maxVal || cellVal <= 0 || usedVals.indexOf(cellVal) >= 0) {
+                // mark cell as invalid
+                console.log("invalid cell=" + cellIndex + ", val=" + cellVal);
+            } else {
+                // mark cell as frozen
+                usedVals.push(cells[cellIndex]);
+                console.log("usedVal=" + usedVals);
+            }
+        }
+    }
+
+    handleClearClick() {
+        this.clearBoard();
     }
 
     render() {
@@ -45,7 +70,7 @@ class Board extends Component {
         }
         return (
             <div className="numbrix">
-                <Status onClearClick={this.handleClearClick}/>
+                <Status onClearClick={this.handleClearClick} onInitClick={this.handleInitClick}/>
 
                 <div className="numbrix-board">
                     {rows}
