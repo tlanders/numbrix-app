@@ -25,7 +25,9 @@ class Board extends Component {
 
     renderCell(i) {
         return (
-            <Cell key={i} value={this.state.cells[i].value} cellstate={this.state.cells[i].cellstate} onChange={(evt) => this.handleCellChange(i, evt)}/>
+            <Cell key={i} value={this.state.cells[i].value}
+                  cellstate={this.state.cells[i].cellstate}
+                  onChange={(evt) => this.handleCellChange(i, evt)}/>
         )
     }
 
@@ -33,20 +35,22 @@ class Board extends Component {
         console.log('onchange, key=' + i + ", val=" + event.target.value);
         const cells = this.state.cells.slice();
         let newVal = Number.parseInt(event.target.value);
-        let newState = CELL_STATE.INVALID;
-        if(isNaN(newVal)) {
-            newVal = '';
-            newState = CELL_STATE.EMPTY;
-            console.log('not num');
-        } else {
-            newVal = event.target.value;
-            newState = CELL_STATE.VALID;
-            console.log('is num');
+        if(cells[i].cellstate != CELL_STATE.CONSTANT) {
+            let newState = CELL_STATE.INVALID;
+            if (isNaN(newVal)) {
+                newVal = '';
+                newState = CELL_STATE.EMPTY;
+                console.log('not num');
+            } else {
+                newVal = event.target.value;
+                newState = CELL_STATE.VALID;
+                console.log('is num');
+            }
+            let theCell = cells[i];
+            theCell = {value: newVal, cellstate: newState};
+            cells[i] = theCell;
+            this.setState({cells: cells});
         }
-        let theCell = cells[i];
-        theCell = {value : newVal, cellstate : newState};
-        cells[i] = theCell;
-        this.setState({cells:cells});
     }
 
     clearBoard() {
@@ -55,7 +59,7 @@ class Board extends Component {
 
     handleInitClick(i, event) {
         const cells = this.state.cells.slice();
-        const maxVal = this.state.width * 2;
+        const maxVal = this.state.width * this.state.width;
         let usedVals = [];
         for(let cellIndex = 0; cellIndex < cells.length; cellIndex++) {
             const cellVal = cells[cellIndex].value;
@@ -102,7 +106,9 @@ class Board extends Component {
         const cells = [];
         for(let i = 0; i < this.state.width; i++) {
             const k = rowNum * this.state.width + i;
-            cells.push(<Cell key={k} value={this.state.cells[k].value} cellstate={this.state.cells[k].cellstate} onChange={(evt) => this.handleCellChange(k, evt)}/>)
+            cells.push(<Cell key={k} value={this.state.cells[k].value}
+                             cellstate={this.state.cells[k].cellstate}
+                             onChange={(evt) => this.handleCellChange(k, evt)}/>)
         }
         return (
             <div className="numbrix-row" key={rowNum}>
