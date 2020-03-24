@@ -21,6 +21,7 @@ class Board extends Component {
         this.handleClearClick = this.handleClearClick.bind(this);
         this.handleInitClick = this.handleInitClick.bind(this);
         this.clearBoard = this.clearBoard.bind(this);
+        this.handleCheckBoardClick = this.handleCheckBoardClick.bind(this);
     }
 
     renderCell(i) {
@@ -31,18 +32,44 @@ class Board extends Component {
         )
     }
 
+    handleCheckBoardClick() {
+        console.log("check board clicked");
+        const cells = this.state.cells.slice();
+        for(let row = 0; row < this.state.width; row++) {
+            for(let col = 0; col < this.state.width; col++) {
+                const cellIndex = row * this.state.width + col;
+                if(cells[cellIndex.state] === CELL_STATE.VALID) {
+                    // compare to neighboring cells
+                    const cellVal = cells[cellIndex].value;
+                    // const cellsToCheck = getCellsToCheck(cellIndex, this.state.width);
+                }
+            }
+        }
+    }
+
+    getCellsToCheck(index, width) {
+        let cellsToCheck = [];
+        if(index > width) {
+            cellsToCheck.push(index - width);
+        }
+        if(index < width * (width - 1)) {
+            cellsToCheck.push(index + width);
+        }
+        // cellsT
+    }
+
     handleCellChange(i, event) {
         console.log('onchange, key=' + i + ", val=" + event.target.value);
         const cells = this.state.cells.slice();
-        let newVal = Number.parseInt(event.target.value);
-        if(cells[i].cellstate != CELL_STATE.CONSTANT) {
+        if(cells[i].cellstate !== CELL_STATE.CONSTANT) {
+            let oldVal = this.state.cells[i].value;
+            let newVal = Number(event.target.value);
             let newState = CELL_STATE.INVALID;
-            if (isNaN(newVal)) {
-                newVal = '';
-                newState = CELL_STATE.EMPTY;
+            if (isNaN(newVal) || newVal <= 0 || newVal > this.state.width ** 2) {
+                newVal = oldVal;
+                newState = oldVal === '' ? CELL_STATE.EMPTY : CELL_STATE.VALID;
                 console.log('not num');
             } else {
-                newVal = event.target.value;
                 newState = CELL_STATE.VALID;
                 console.log('is num');
             }
@@ -93,7 +120,7 @@ class Board extends Component {
         }
         return (
             <div className="numbrix">
-                <Status onClearClick={this.handleClearClick} onInitClick={this.handleInitClick}/>
+                <Status onClearClick={this.handleClearClick} onInitClick={this.handleInitClick} onCheckClick={this.handleCheckBoardClick}/>
 
                 <div className="numbrix-board">
                     {rows}
