@@ -22,6 +22,7 @@ class Board extends Component {
         this.handleInitClick = this.handleInitClick.bind(this);
         this.clearBoard = this.clearBoard.bind(this);
         this.handleCheckBoardClick = this.handleCheckBoardClick.bind(this);
+        this.getCellsToCheck = this.getCellsToCheck.bind(this);
     }
 
     renderCell(i) {
@@ -35,13 +36,32 @@ class Board extends Component {
     handleCheckBoardClick() {
         console.log("check board clicked");
         const cells = this.state.cells.slice();
+        let constantCells = [];
+        let otherCells = [];
         for(let row = 0; row < this.state.width; row++) {
             for(let col = 0; col < this.state.width; col++) {
                 const cellIndex = row * this.state.width + col;
-                if(cells[cellIndex.state] === CELL_STATE.VALID) {
+                const cellVal = cells[cellIndex].value;
+                const cellsToCheck = this.getCellsToCheck(cellIndex, this.state.width);
+
+                // console.log("cellIndex=" + cellIndex + ", row=" + row + ", cell=" + col);
+                if(cells[cellIndex].cellstate === CELL_STATE.CONSTANT) {
+                    let tempCells = [];
+                    constantCells.push(cellVal);
+                    cellsToCheck.forEach(theIndex => {
+                        const theCellVal = cells[theIndex].value;
+                        const theCellState = cells[theIndex].cellstate;
+                        if(theCellState === CELL_STATE.VALID) {
+                            if(theCellVal === cellVal - 1 || theCellVal === cellVal + 1) {
+
+                            }
+                        }
+                    });
+                } else if(cells[cellIndex].cellstate === CELL_STATE.VALID) {
                     // compare to neighboring cells
-                    const cellVal = cells[cellIndex].value;
-                    // const cellsToCheck = getCellsToCheck(cellIndex, this.state.width);
+                    cellsToCheck.forEach(theVal => {
+
+                    });
                 }
             }
         }
@@ -50,12 +70,22 @@ class Board extends Component {
     getCellsToCheck(index, width) {
         let cellsToCheck = [];
         if(index > width) {
+            // cell above
             cellsToCheck.push(index - width);
         }
         if(index < width * (width - 1)) {
+            // cell below
             cellsToCheck.push(index + width);
         }
-        // cellsT
+        if(index % width !== 0) {
+            // cell to left
+            cellsToCheck.push(index - 1);
+        }
+        if(index % width !== (width - 1)) {
+            cellsToCheck.push(index + 1);
+        }
+        console.log('cells to check, i=' + index + ', cells=' + cellsToCheck);
+        return cellsToCheck;
     }
 
     handleCellChange(i, event) {
@@ -65,7 +95,10 @@ class Board extends Component {
             let oldVal = this.state.cells[i].value;
             let newVal = Number(event.target.value);
             let newState = CELL_STATE.INVALID;
-            if (isNaN(newVal) || newVal <= 0 || newVal > this.state.width ** 2) {
+            if(event.target.value === '') {
+                newVal = '';
+                newState = CELL_STATE.EMPTY;
+            } else if (isNaN(newVal) || newVal <= 0 || newVal > this.state.width ** 2) {
                 newVal = oldVal;
                 newState = oldVal === '' ? CELL_STATE.EMPTY : CELL_STATE.VALID;
                 console.log('not num');
