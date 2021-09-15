@@ -1,9 +1,8 @@
 import {combineReducers} from "redux";
-import {cellsReducer} from "./cellsReducer";
-import {boardReducer} from "./boardReducer";
+import {gameReducer} from "./gameReducer";
+// import {boardReducer} from "./boardReducer";
 
 
 export default combineReducers({
-    game: cellsReducer,
-    board: boardReducer
+    game: gameReducer,
 });

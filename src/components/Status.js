@@ -1,12 +1,12 @@
 import React from 'react';
-import {BOARD_START_GAME, clearBoard, PLAY_MODE, startGame} from "../redux/boardActions";
+import {clearBoard, PLAY_MODE, startGame} from "../redux/gameActions";
 import {connect, useSelector} from "react-redux";
 import PropTypes from 'prop-types';
 
 const Status = ({onClearClick, onInitClick, onCheckClick}) => {
-    const board = useSelector(state => state.board);
-    console.log('status - board: ', board);
-    const hasGameStarted = board.mode === PLAY_MODE;
+    const game = useSelector(state => state.game);
+    console.log('status - game: ', game);
+    const hasGameStarted = game.mode === PLAY_MODE;
 
     return (
         <div className="numbrix-status">

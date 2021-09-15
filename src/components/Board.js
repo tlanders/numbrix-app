@@ -1,13 +1,7 @@
 import React, {Component} from 'react';
 import Cell from "./Cell";
 import Status from "./Status";
-
-const CELL_STATE = {
-    EMPTY : 0,
-    INVALID : -1,
-    VALID : 1,
-    CONSTANT : 2
-};
+import {CELL_STATE} from "../redux/gameActions";
 
 class Board extends Component {
 
