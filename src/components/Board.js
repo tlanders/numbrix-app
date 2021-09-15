@@ -153,7 +153,7 @@ class Board extends Component {
         }
         return (
             <div className="numbrix">
-                <Status onClearClick={this.handleClearClick} onInitClick={this.handleInitClick} onCheckClick={this.handleCheckBoardClick}/>
+                <Status onCheckClick={this.handleCheckBoardClick}/>
 
                 <div className="numbrix-board">
                     {rows}
