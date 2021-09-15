@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Cell from "./Cell";
 import Status from "./Status";
 import {CELL_STATE} from "../redux/gameActions";
+import {connect} from "react-redux";
 
 class Board extends Component {
 
@@ -12,9 +14,7 @@ class Board extends Component {
             width: 4
         };
         this.handleCellChange = this.handleCellChange.bind(this);
-        this.handleClearClick = this.handleClearClick.bind(this);
         this.handleInitClick = this.handleInitClick.bind(this);
-        this.clearBoard = this.clearBoard.bind(this);
         this.handleCheckBoardClick = this.handleCheckBoardClick.bind(this);
         this.getCellsToCheck = this.getCellsToCheck.bind(this);
     }
@@ -107,10 +107,6 @@ class Board extends Component {
         }
     }
 
-    clearBoard() {
-        this.setState({cells:Array(16).fill({value:'', cellstate:CELL_STATE.EMPTY})});
-    }
-
     handleInitClick(i, event) {
         const cells = this.state.cells.slice();
         const maxVal = this.state.width * this.state.width;
@@ -134,10 +130,6 @@ class Board extends Component {
                 console.log("usedVal=" + usedVals);
             }
         }
-    }
-
-    handleClearClick() {
-        this.clearBoard();
     }
 
     render() {
@@ -172,4 +164,12 @@ class Board extends Component {
     }
 }
 
-export default Board;
+Board.propTypes = {
+    // onClearBoard: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    // onClearBoard: () => dispatch(clearBoard())
+});
+
+export default connect(null, mapDispatchToProps)(Board);

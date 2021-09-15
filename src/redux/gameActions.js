@@ -1,12 +1,12 @@
-export const BOARD_START_GAME = 'board/START_GAME';
-export const BOARD_CLEAR_BOARD = 'board/CLEAR_BOARD';
+export const GAME_START = 'game/START';
+export const GAME_CLEAR_BOARD = 'game/CLEAR_BOARD';
 
 export const clearBoard = () => ({
-    type: BOARD_CLEAR_BOARD
+    type: GAME_CLEAR_BOARD
 });
 
 export const startGame = () => ({
-    type: BOARD_START_GAME
+    type: GAME_START
 });
 
 export const SETUP_MODE = 'SETUP_MODE';

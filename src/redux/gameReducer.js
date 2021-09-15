@@ -1,4 +1,4 @@
-import {BOARD_CLEAR_BOARD, BOARD_START_GAME, CELL_STATE, PLAY_MODE, SETUP_MODE} from "./gameActions";
+import {GAME_CLEAR_BOARD, GAME_START, CELL_STATE, PLAY_MODE, SETUP_MODE} from "./gameActions";
 
 const initialState = {
     mode: SETUP_MODE,
@@ -11,12 +11,12 @@ export const gameReducer = (state = initialState, action) => {
     console.log('game reducer - type: ', action.type);
     console.log('game reducer - state: ', state);
     switch(action.type) {
-        case BOARD_START_GAME:
+        case GAME_START:
             return {
                 ...state,
                 mode: PLAY_MODE,
             };
-        case BOARD_CLEAR_BOARD:
+        case GAME_CLEAR_BOARD:
             return {
                 ...state,
                 mode: SETUP_MODE,
