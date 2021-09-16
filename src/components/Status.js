@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const Status = ({onClearClick, onInitClick, onCheckClick}) => {
     const game = useSelector(state => state.game);
-    console.log('status - game: ', game);
+    // console.log('status - game: ', game);
     const hasGameStarted = game.mode === PLAY_MODE;
 
     return (

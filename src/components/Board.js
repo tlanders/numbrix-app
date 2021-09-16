@@ -2,28 +2,24 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Cell from "./Cell";
 import Status from "./Status";
-import {CELL_STATE} from "../redux/gameActions";
+import {CELL_STATE, cellChange} from "../redux/gameActions";
 import {connect} from "react-redux";
 
 class Board extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            cells:Array(16).fill({value:'', cellstate:CELL_STATE.EMPTY}),
-            width: 4
-        };
         this.handleCellChange = this.handleCellChange.bind(this);
-        this.handleInitClick = this.handleInitClick.bind(this);
         this.handleCheckBoardClick = this.handleCheckBoardClick.bind(this);
         this.getCellsToCheck = this.getCellsToCheck.bind(this);
     }
 
-    renderCell(i) {
+    renderCell(index) {
+        const theCell = this.props.game.cells[index];
         return (
-            <Cell key={i} value={this.state.cells[i].value}
-                  cellstate={this.state.cells[i].cellstate}
-                  onChange={(evt) => this.handleCellChange(i, evt)}/>
+            <Cell key={index} value={theCell.value}
+                  cellstate={theCell.cellstate}
+                  onChange={(evt) => this.handleCellChange(index, evt)}/>
         )
     }
 
@@ -82,59 +78,16 @@ class Board extends Component {
         return cellsToCheck;
     }
 
-    handleCellChange(i, event) {
-        console.log('onchange, key=' + i + ", val=" + event.target.value);
-        const cells = this.state.cells.slice();
-        if(cells[i].cellstate !== CELL_STATE.CONSTANT) {
-            let oldVal = this.state.cells[i].value;
-            let newVal = Number(event.target.value);
-            let newState = CELL_STATE.INVALID;
-            if(event.target.value === '') {
-                newVal = '';
-                newState = CELL_STATE.EMPTY;
-            } else if (isNaN(newVal) || newVal <= 0 || newVal > this.state.width ** 2) {
-                newVal = oldVal;
-                newState = oldVal === '' ? CELL_STATE.EMPTY : CELL_STATE.VALID;
-                console.log('not num');
-            } else {
-                newState = CELL_STATE.VALID;
-                console.log('is num');
-            }
-            let theCell = cells[i];
-            theCell = {value: newVal, cellstate: newState};
-            cells[i] = theCell;
-            this.setState({cells: cells});
-        }
-    }
-
-    handleInitClick(i, event) {
-        const cells = this.state.cells.slice();
-        const maxVal = this.state.width * this.state.width;
-        let usedVals = [];
-        for(let cellIndex = 0; cellIndex < cells.length; cellIndex++) {
-            const cellVal = cells[cellIndex].value;
-            if(cellVal === '') {
-                continue;
-            } else if(cellVal > maxVal || cellVal <= 0 || usedVals.indexOf(cellVal) >= 0) {
-                // mark cell as invalid
-                let theCell = cells[cellIndex];
-                theCell.cellstate = CELL_STATE.INVALID;
-                this.setState({cells:cells});
-                console.log("invalid cell=" + cellIndex + ", val=" + cellVal);
-            } else {
-                // mark cell as frozen
-                usedVals.push(cells[cellIndex].value);
-                let theCell = cells[cellIndex];
-                theCell.cellstate = CELL_STATE.CONSTANT;
-                this.setState({cells:cells});
-                console.log("usedVal=" + usedVals);
-            }
-        }
+    handleCellChange(index, event) {
+        const cellValue = event.target.value;
+        console.log('Board - cell change, index=' + index + ", val=" + cellValue);
+        this.props.onCellChange(index, cellValue);
     }
 
     render() {
+        const {width} = this.props.game;
         const rows = []
-        for(let i = 0; i < this.state.width; i++) {
+        for(let i = 0; i < width; i++) {
             rows.push(this.renderRow(i));
         }
         return (
@@ -149,27 +102,33 @@ class Board extends Component {
     }
 
     renderRow(rowNum) {
-        const cells = [];
-        for(let i = 0; i < this.state.width; i++) {
-            const k = rowNum * this.state.width + i;
-            cells.push(<Cell key={k} value={this.state.cells[k].value}
-                             cellstate={this.state.cells[k].cellstate}
-                             onChange={(evt) => this.handleCellChange(k, evt)}/>)
+        const {cells, width} = this.props.game;
+        const renderCells = [];
+        for(let i = 0; i < width; i++) {
+            const index = rowNum * width + i;
+            renderCells.push(<Cell key={index} value={cells[index].value}
+                             cellstate={cells[index].cellstate}
+                             onChange={(evt) => this.handleCellChange(index, evt)}/>)
         }
         return (
             <div className="numbrix-row" key={rowNum}>
-                {cells}
+                {renderCells}
             </div>
         );
     }
 }
 
 Board.propTypes = {
-    // onClearBoard: PropTypes.func.isRequired
+    game: PropTypes.object.isRequired,
+    onCellChange: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    // onClearBoard: () => dispatch(clearBoard())
+const mapStateToProps = (state) => ({
+    game: state.game
 });
 
-export default connect(null, mapDispatchToProps)(Board);
+const mapDispatchToProps = (dispatch) => ({
+    onCellChange: (index, newVal) => dispatch(cellChange(index, newVal)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

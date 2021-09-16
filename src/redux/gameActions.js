@@ -1,5 +1,14 @@
 export const GAME_START = 'game/START';
 export const GAME_CLEAR_BOARD = 'game/CLEAR_BOARD';
+export const GAME_CELL_CHANGE = 'game/CELL_CHANGE';
+
+export const cellChange = (index, newCellVal) => ({
+    type: GAME_CELL_CHANGE,
+    payload: {
+        index,
+        value: newCellVal
+    }
+});
 
 export const clearBoard = () => ({
     type: GAME_CLEAR_BOARD
