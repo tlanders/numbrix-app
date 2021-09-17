@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Cell from "./Cell";
-import Status from "./Status";
 import {CELL_STATE, cellChange} from "../redux/gameActions";
 import {connect} from "react-redux";
 
@@ -10,7 +9,6 @@ class Board extends Component {
     constructor(props) {
         super(props);
         this.handleCellChange = this.handleCellChange.bind(this);
-        this.handleCheckBoardClick = this.handleCheckBoardClick.bind(this);
         this.getCellsToCheck = this.getCellsToCheck.bind(this);
     }
 
@@ -21,40 +19,6 @@ class Board extends Component {
                   cellstate={theCell.cellstate}
                   onChange={(evt) => this.handleCellChange(index, evt)}/>
         )
-    }
-
-    handleCheckBoardClick() {
-        console.log("check board clicked");
-        const cells = this.state.cells.slice();
-        let constantCells = [];
-        let otherCells = [];
-        for(let row = 0; row < this.state.width; row++) {
-            for(let col = 0; col < this.state.width; col++) {
-                const cellIndex = row * this.state.width + col;
-                const cellVal = cells[cellIndex].value;
-                const cellsToCheck = this.getCellsToCheck(cellIndex, this.state.width);
-
-                // console.log("cellIndex=" + cellIndex + ", row=" + row + ", cell=" + col);
-                if(cells[cellIndex].cellstate === CELL_STATE.CONSTANT) {
-                    let tempCells = [];
-                    constantCells.push(cellVal);
-                    cellsToCheck.forEach(theIndex => {
-                        const theCellVal = cells[theIndex].value;
-                        const theCellState = cells[theIndex].cellstate;
-                        if(theCellState === CELL_STATE.VALID) {
-                            if(theCellVal === cellVal - 1 || theCellVal === cellVal + 1) {
-
-                            }
-                        }
-                    });
-                } else if(cells[cellIndex].cellstate === CELL_STATE.VALID) {
-                    // compare to neighboring cells
-                    cellsToCheck.forEach(theVal => {
-
-                    });
-                }
-            }
-        }
     }
 
     getCellsToCheck(index, width) {
@@ -91,12 +55,8 @@ class Board extends Component {
             rows.push(this.renderRow(i));
         }
         return (
-            <div className="numbrix">
-                <Status onCheckClick={this.handleCheckBoardClick}/>
-
-                <div className="numbrix-board">
-                    {rows}
-                </div>
+            <div className="numbrix-board">
+                {rows}
             </div>
         );
     }
