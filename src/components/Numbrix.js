@@ -1,19 +1,15 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Board from "./Board";
 import Status from "./Status";
 import {CELL_STATE} from "../redux/gameActions";
 
-class Numbrix extends Component {
-    constructor(props) {
-        super(props);
-        this.handleCheckBoardClick = this.handleCheckBoardClick.bind(this);
-    }
+const Numbrix = () => {
 
-    handleCheckBoardClick() {
+    const handleCheckBoardClick = () => {
         console.log("check board clicked");
         const cells = this.state.cells.slice();
         let constantCells = [];
-        let otherCells = [];
+        // let otherCells = [];
         for(let row = 0; row < this.state.width; row++) {
             for(let col = 0; col < this.state.width; col++) {
                 const cellIndex = row * this.state.width + col;
@@ -43,17 +39,15 @@ class Numbrix extends Component {
         }
     }
 
-    render() {
-        return (
-            <div className="numbrix">
-                <h1>Welcome to Numbrix!</h1>
-                <div className="numbrix">
-                    <Status onCheckClick={this.handleCheckBoardClick}/>
-                    <Board/>
-                </div>
+    return (
+        <div className="numbrix">
+            <h1>Welcome to Numbrix!</h1>
+            <div>
+                <Status onCheckClick={handleCheckBoardClick}/>
+                <Board/>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default Numbrix;
