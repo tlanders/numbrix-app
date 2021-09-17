@@ -32,6 +32,16 @@ const handleCellChange = ({cells, width, height}, index, rawNewValue) => {
     return cells;
 };
 
+const handleGameStart = ({width, height, cells}) => {
+    const newCells = cells.slice();
+    for(let i = 0; i < width * height; i++) {
+        if(newCells[i].value !== '') {
+            newCells[i].cellstate = CELL_STATE.CONSTANT;
+        }
+    }
+    return newCells;
+};
+
 export const gameReducer = (state = initialState, action) => {
     console.log('game reducer - action: ', action);
     console.log('game reducer - state: ', state);
@@ -46,6 +56,7 @@ export const gameReducer = (state = initialState, action) => {
             return {
                 ...state,
                 mode: PLAY_MODE,
+                cells: handleGameStart(state),
             };
         case GAME_CLEAR_BOARD:
             return {
