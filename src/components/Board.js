@@ -6,36 +6,6 @@ import {connect} from "react-redux";
 
 const Board = (props) => {
 
-    // const renderCell = (index) => {
-    //     const theCell = props.game.cells[index];
-    //     return (
-    //         <Cell key={index} value={theCell.value}
-    //               cellstate={theCell.cellstate}
-    //               onChange={(evt) => handleCellChange(index, evt)}/>
-    //     )
-    // };
-
-    // const getCellsToCheck = (index, width) => {
-    //     let cellsToCheck = [];
-    //     if(index > width) {
-    //         // cell above
-    //         cellsToCheck.push(index - width);
-    //     }
-    //     if(index < width * (width - 1)) {
-    //         // cell below
-    //         cellsToCheck.push(index + width);
-    //     }
-    //     if(index % width !== 0) {
-    //         // cell to left
-    //         cellsToCheck.push(index - 1);
-    //     }
-    //     if(index % width !== (width - 1)) {
-    //         cellsToCheck.push(index + 1);
-    //     }
-    //     console.log('cells to check, i=' + index + ', cells=' + cellsToCheck);
-    //     return cellsToCheck;
-    // };
-
     const handleCellChange = (index, event) => {
         const cellValue = event.target.value;
         console.log('Board - cell change, index=' + index + ", val=" + cellValue);
