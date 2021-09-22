@@ -1,10 +1,23 @@
 import React from 'react';
 import {clearBoard, PLAY_MODE, startGame} from "../redux/gameActions";
-import {connect, useSelector} from "react-redux";
-import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 
-const Status = ({onClearClick, onInitClick, onCheckClick}) => {
-    const game = useSelector(state => state.game);
+type ButtonClickEventHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
+
+type Props = {
+    onClearClick: ButtonClickEventHandler,
+    onInitClick: ButtonClickEventHandler,
+    onCheckClick: ButtonClickEventHandler,
+    game: Game
+}
+type Game = {
+    mode: string
+};
+type State = {
+    game: Game
+};
+const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}: Props) => {
+    // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
     const hasGameStarted = game.mode === PLAY_MODE;
 
@@ -21,13 +34,7 @@ const Status = ({onClearClick, onInitClick, onCheckClick}) => {
     );
 }
 
-Status.propTypes = {
-    onClearClick: PropTypes.func.isRequired,
-    onInitClick: PropTypes.func.isRequired,
-    onCheckClick: PropTypes.func.isRequired,
-}
-
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: any) => ({
     onClearClick: () => {
         console.log('dispatching clear board');
         dispatch(clearBoard());
@@ -38,4 +45,8 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-export default connect(null, mapDispatchToProps)(Status);
+const mapStateToProps = (state: State) => ({
+    game: state.game
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Status);

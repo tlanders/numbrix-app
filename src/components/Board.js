@@ -64,7 +64,8 @@ const Board = (props) => {
         rows.push(renderRow(i));
     }
     return (
-        <div className="numbrix-board">
+        <div
+            className="numbrix-board">
             {rows}
         </div>
     );
