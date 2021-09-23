@@ -1,6 +1,7 @@
 import React from 'react';
 import {clearBoard, PLAY_MODE, startGame} from "../redux/gameActions";
 import {connect} from "react-redux";
+import {Game, State} from "../types";
 
 type ButtonClickEventHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
 
@@ -10,12 +11,7 @@ type Props = {
     onCheckClick: ButtonClickEventHandler,
     game: Game
 }
-type Game = {
-    mode: string
-};
-type State = {
-    game: Game
-};
+
 const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}: Props) => {
     // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
