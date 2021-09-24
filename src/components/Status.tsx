@@ -1,7 +1,7 @@
 import React from 'react';
-import {clearBoard, PLAY_MODE, startGame} from "../redux/gameActions";
+import {checkBoard, clearBoard, startGame} from "../redux/gameActions";
 import {connect} from "react-redux";
-import {Game, State} from "../types";
+import {Game, GameMode, State} from "../types";
 
 type ButtonClickEventHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
 
@@ -15,7 +15,7 @@ type Props = {
 const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}: Props) => {
     // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
-    const hasGameStarted = game.mode === PLAY_MODE;
+    const hasGameStarted = game.mode === GameMode.PLAY_MODE;
 
     return (
         <div className="numbrix-status">
@@ -38,6 +38,10 @@ const mapDispatchToProps = (dispatch: any) => ({
     onInitClick: () => {
         console.log('dispatching start game');
         dispatch(startGame());
+    },
+    onCheckClick: () => {
+        console.log('dispatching check board click');
+        dispatch(checkBoard());
     }
 });
 

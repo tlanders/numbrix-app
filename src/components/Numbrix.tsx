@@ -1,6 +1,7 @@
 import React from 'react';
 import Board from "./Board";
 import Status from "./Status";
+// import {CellState} from "../types";
 
 const Numbrix = () => {
 
@@ -42,7 +43,7 @@ const Numbrix = () => {
         <div className="numbrix">
             <h1>Welcome to Numbrix!</h1>
             <div>
-                <Status onCheckClick={() => {}}/>
+                <Status/>
                 <Board/>
             </div>
         </div>
