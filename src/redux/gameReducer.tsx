@@ -1,48 +1,54 @@
-import {GAME_CLEAR_BOARD, GAME_START, CELL_STATE, PLAY_MODE, SETUP_MODE, GAME_CELL_CHANGE} from "./gameActions";
+import {GAME_CLEAR_BOARD, GAME_START, PLAY_MODE, SETUP_MODE, GAME_CELL_CHANGE} from "./gameActions";
+import {Cell, CellState, Game} from "../types";
 
 const initialState = {
     mode: SETUP_MODE,
     width: 4,
     height: 4,
-    cells:Array(16).fill({value:'', cellstate:CELL_STATE.EMPTY})
+    cells:Array(16).fill({value:'', cellstate:CellState.EMPTY})
 };
 
-const handleCellChange = ({cells, width, height}, index, rawNewValue) => {
+const handleCellChange = ({cells, width, height}:Game, index: number, rawNewValue: string) => {
     const cellState = cells[index].cellstate;
-    if(cellState !== CELL_STATE.CONSTANT) {
-        let oldVal = cells[index].value;
-        let newVal = Number(rawNewValue);
-        let newState = CELL_STATE.INVALID;
+    if(cellState !== CellState.CONSTANT) {
+        let oldVal: string = cells[index].value;
+        let newVal: (number|string) = Number(rawNewValue);
+        let newState: CellState = CellState.INVALID;
         if(rawNewValue === '') {
             newVal = '';
-            newState = CELL_STATE.EMPTY;
+            newState = CellState.EMPTY;
         } else if (isNaN(newVal) || newVal <= 0 || newVal > (width * height)) {
             newVal = oldVal;
-            newState = oldVal === '' ? CELL_STATE.EMPTY : CELL_STATE.VALID;
+            newState = oldVal === '' ? CellState.EMPTY : CellState.VALID;
             console.log('handleCellChange - not num: ', rawNewValue);
         } else {
-            newState = CELL_STATE.VALID;
+            newState = CellState.VALID;
             console.log('handleCellChange - is num', newVal);
         }
-        const newCells = cells.slice();
-        newCells[index] = {value: newVal, cellstate: newState};
+        const newCells: Cell[] = cells.slice();
+        newCells[index] = {value: String(newVal), cellstate: newState};
         return newCells;
     }
 
     return cells;
 };
 
-const handleGameStart = ({width, height, cells}) => {
+const handleGameStart = ({width, height, cells}:Game) => {
     const newCells = cells.slice();
     for(let i = 0; i < width * height; i++) {
         if(newCells[i].value !== '') {
-            newCells[i].cellstate = CELL_STATE.CONSTANT;
+            newCells[i].cellstate = CellState.CONSTANT;
         }
     }
     return newCells;
 };
 
-export const gameReducer = (state = initialState, action) => {
+type Action = {
+    type: string,
+    payload: any
+};
+
+export const gameReducer = (state = initialState, action:Action) => {
     console.log('game reducer - action: ', action);
     console.log('game reducer - state: ', state);
     switch(action.type) {
@@ -62,7 +68,7 @@ export const gameReducer = (state = initialState, action) => {
             return {
                 ...state,
                 mode: SETUP_MODE,
-                cells:Array(16).fill({value:'', cellstate:CELL_STATE.EMPTY})
+                cells:Array(16).fill({value:'', cellstate:CellState.EMPTY})
             };
         default:
             return state;

@@ -2,7 +2,7 @@ export const GAME_START = 'game/START';
 export const GAME_CLEAR_BOARD = 'game/CLEAR_BOARD';
 export const GAME_CELL_CHANGE = 'game/CELL_CHANGE';
 
-export const cellChange = (index, newCellVal) => ({
+export const cellChange = (index: number, newCellVal: string) => ({
     type: GAME_CELL_CHANGE,
     payload: {
         index,
@@ -20,10 +20,3 @@ export const startGame = () => ({
 
 export const SETUP_MODE = 'SETUP_MODE';
 export const PLAY_MODE = 'PLAY_MODE';
-
-export const CELL_STATE = {
-    EMPTY: 0,
-    INVALID: -1,
-    VALID: 1,
-    CONSTANT: 2
-};
