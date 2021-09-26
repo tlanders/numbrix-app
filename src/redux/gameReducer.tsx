@@ -40,10 +40,10 @@ const handleCheckBoardClick = ({cells, width, height}:Game) => {
         for(let col = 0; col < width; col++) {
             const cellIndex = row * width + col;
             const cellVal = Number(newCells[cellIndex].value);
-            const cellstate = newCells[cellIndex].cellstate;
+            const cellState = newCells[cellIndex].cellstate;
 
             // console.log("cellIndex=" + cellIndex + ", row=" + row + ", cell=" + col);
-            if(cellstate === CellState.CONSTANT) {
+            if(cellState === CellState.CONSTANT) {
                 foundCells[cellVal] = cells[cellIndex];
                 const cellsToCheck = getCellsToCheck(cellIndex, width);
                 let tempCells = [];
@@ -57,7 +57,7 @@ const handleCheckBoardClick = ({cells, width, height}:Game) => {
                         }
                     }
                 });
-            } else if(cellstate === CellState.VALID) {
+            } else if(cellState === CellState.VALID) {
                 foundCells[cellVal] = cells[cellIndex];
                 const cellsToCheck = getCellsToCheck(cellIndex, width);
                 // compare to neighboring cells

@@ -6,6 +6,11 @@ div.numbrix-status {
   margin-bottom: 20px;
 }
 
+p.status-msg {
+  padding: 5px 0 5px;
+  background-color: lightpink;
+}
+
 button.numbrix-cell, input.numbrix-cell {
   height: 50px;
   width: 50px;

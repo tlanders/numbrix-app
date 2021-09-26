@@ -19,6 +19,7 @@ const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}
 
     return (
         <div className="numbrix-status">
+            <p className="status-msg">{hasGameStarted ? <span>Game in Progress...</span> : <span>Please Setup Game</span>}</p>
             <button className="status-btn" onClick={onClearClick}>Clear Board</button>
             <button
                 className="status-btn"
