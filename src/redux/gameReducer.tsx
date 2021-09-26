@@ -8,8 +8,12 @@ const initialState = {
     cells:Array(16).fill({value:'', cellstate:CellState.EMPTY})
 };
 
-const isConstantCell = (c:Cell) => c.cellstate === CellState.CONSTANT;
-const isValidCell = (c:Cell) => c.cellstate === CellState.VALID;
+const isConstantCellState = (cs:CellState) => cs === CellState.CONSTANT;
+const isConstantCell = (c:Cell) => isConstantCellState(c.cellstate);
+const isValidCellState = (cs:CellState) => cs === CellState.VALID;
+const isValidCell = (c:Cell) => isValidCellState(c.cellstate);
+const isInvalidCellState = (cs:CellState) => cs === CellState.INVALID;
+const isInvalidCell = (c:Cell) => isInvalidCellState(c.cellstate);
 
 const markDuplicateCells = (cells:Cell[], count:number) => {
     let foundCells:Cell[] = [];
@@ -60,16 +64,24 @@ const handleCheckBoardClick = ({cells, width, height}:Game) => {
             } else if(cellState === CellState.VALID) {
                 foundCells[cellVal] = cells[cellIndex];
                 const cellsToCheck = getCellsToCheck(cellIndex, width);
-                // compare to neighboring cells
-                cellsToCheck.forEach(cellIndex => {
-                    const theCellState = cells[cellIndex].cellstate;
-                    if(theCellState === CellState.VALID) {
-
-                    } else if(theCellState === CellState.CONSTANT) {
-
+                // compare to neighboring cells. dup cells have already been marked so
+                // now only need to verify that there is at least one neighboring cell that is
+                // +/- 1 of this cell.
+                let foundOtherCell = false;
+                cellsToCheck.forEach(theIndex => {
+                    const theCellState = cells[theIndex].cellstate;
+                    if(isValidCellState(theCellState) || isConstantCellState(theCellState)) {
+                        const theCellVal = Number(cells[theIndex].value);
+                        if(theCellVal === cellVal - 1 || theCellVal === cellVal + 1) {
+                            foundOtherCell = true;
+                        }
                     }
-
                 });
+                if(!foundOtherCell) {
+                    // current cell is invalid
+                    console.log('found invalid cell: ', cellIndex);
+                    cells[cellIndex].cellstate = CellState.INVALID;
+                }
             }
         }
     }
@@ -79,7 +91,7 @@ const handleCheckBoardClick = ({cells, width, height}:Game) => {
 // TODO - add height?
 const getCellsToCheck = (index: number, width: number) => {
     let cellsToCheck = [];
-    if(index > width) {
+    if(index >= width) {
         // cell above
         cellsToCheck.push(index - width);
     }
@@ -125,8 +137,9 @@ const handleCellChange = ({cells, width, height}:Game, index: number, rawNewValu
 
 const handleGameStart = ({width, height, cells}:Game) => {
     const newCells = cells.slice();
+    markDuplicateCells(newCells, width * height);
     for(let i = 0; i < width * height; i++) {
-        if(newCells[i].value !== '') {
+        if(newCells[i].value !== '' && !isInvalidCell(newCells[i])) {
             newCells[i].cellstate = CellState.CONSTANT;
         }
     }
@@ -138,6 +151,14 @@ type Action = {
     payload: any
 };
 
+const isGameReadyToStart = (cells:Cell[]) => {
+    for(let i = 0; i < cells.length; i++) {
+        if (cells[i].cellstate === CellState.INVALID) return false;
+    }
+    console.log('game ready to start');
+    return true;
+}
+
 export const gameReducer = (state = initialState, action:Action) => {
     console.log('game reducer - action: ', action);
     console.log('game reducer - state: ', state);
@@ -148,12 +169,17 @@ export const gameReducer = (state = initialState, action:Action) => {
                 cells: handleCellChange(state, action.payload.index, action.payload.value),
             };
         case GAME_START:
+            // TODO - need to verify that there are no duplicates and that cells are either valid
+            //   or have an empty spot next to them.
+            const gameCells = handleGameStart(state);
+            const nextMode = isGameReadyToStart(gameCells) ? GameMode.PLAY_MODE : GameMode.SETUP_MODE;
             return {
                 ...state,
-                mode: GameMode.PLAY_MODE,
-                cells: handleGameStart(state),
+                cells: gameCells,
+                mode: nextMode,
             };
         case GAME_CLEAR_BOARD:
+            // TODO - handle differently based on game mode
             return {
                 ...state,
                 mode: GameMode.SETUP_MODE,

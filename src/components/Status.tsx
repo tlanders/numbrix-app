@@ -26,7 +26,11 @@ const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}
                 onClick={onInitClick}
                 disabled={hasGameStarted}
             >Start Game</button>
-            <button className="status-btn" onClick={onCheckClick}>Check Board</button>
+            <button
+                className="status-btn"
+                onClick={onCheckClick}
+                disabled={!hasGameStarted}
+            >Check Board</button>
         </div>
     );
 }
