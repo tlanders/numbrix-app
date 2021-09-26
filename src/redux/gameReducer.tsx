@@ -8,6 +8,96 @@ const initialState = {
     cells:Array(16).fill({value:'', cellstate:CellState.EMPTY})
 };
 
+const isConstantCell = (c:Cell) => c.cellstate === CellState.CONSTANT;
+const isValidCell = (c:Cell) => c.cellstate === CellState.VALID;
+
+const markDuplicateCells = (cells:Cell[], count:number) => {
+    let foundCells:Cell[] = [];
+    for(let i = 0; i < count; i++) {
+        let currentCell = cells[i];
+        if(isValidCell(currentCell) || isConstantCell(currentCell)) {
+            const currentVal = Number(currentCell.value);
+            if (foundCells[currentVal]) {
+                currentCell.cellstate = CellState.INVALID;
+                if (!isConstantCell(foundCells[currentVal])) {
+                    foundCells[currentVal].cellstate = CellState.INVALID;
+                }
+            } else {
+                foundCells[currentVal] = currentCell;
+            }
+        }
+    }
+};
+
+const handleCheckBoardClick = ({cells, width, height}:Game) => {
+    console.log("check board clicked");
+    const newCells = cells.slice();
+    let constantCells = [];
+    let foundCells = [];
+    markDuplicateCells(newCells, width * height);
+    // let otherCells = [];
+    for(let row = 0; row < height; row++) {
+        for(let col = 0; col < width; col++) {
+            const cellIndex = row * width + col;
+            const cellVal = Number(newCells[cellIndex].value);
+            const cellstate = newCells[cellIndex].cellstate;
+
+            // console.log("cellIndex=" + cellIndex + ", row=" + row + ", cell=" + col);
+            if(cellstate === CellState.CONSTANT) {
+                foundCells[cellVal] = cells[cellIndex];
+                const cellsToCheck = getCellsToCheck(cellIndex, width);
+                let tempCells = [];
+                constantCells.push(cellVal);
+                cellsToCheck.forEach(theIndex => {
+                    const theCellVal = Number(newCells[theIndex].value);
+                    const theCellState = newCells[theIndex].cellstate;
+                    if(theCellState === CellState.VALID) {
+                        if(theCellVal === cellVal - 1 || theCellVal === cellVal + 1) {
+
+                        }
+                    }
+                });
+            } else if(cellstate === CellState.VALID) {
+                foundCells[cellVal] = cells[cellIndex];
+                const cellsToCheck = getCellsToCheck(cellIndex, width);
+                // compare to neighboring cells
+                cellsToCheck.forEach(cellIndex => {
+                    const theCellState = cells[cellIndex].cellstate;
+                    if(theCellState === CellState.VALID) {
+
+                    } else if(theCellState === CellState.CONSTANT) {
+
+                    }
+
+                });
+            }
+        }
+    }
+    return newCells;
+}
+
+// TODO - add height?
+const getCellsToCheck = (index: number, width: number) => {
+    let cellsToCheck = [];
+    if(index > width) {
+        // cell above
+        cellsToCheck.push(index - width);
+    }
+    if(index < width * (width - 1)) {
+        // cell below
+        cellsToCheck.push(index + width);
+    }
+    if(index % width !== 0) {
+        // cell to left
+        cellsToCheck.push(index - 1);
+    }
+    if(index % width !== (width - 1)) {
+        cellsToCheck.push(index + 1);
+    }
+    console.log('cells to check, i=' + index + ', cells=' + cellsToCheck);
+    return cellsToCheck;
+}
+
 const handleCellChange = ({cells, width, height}:Game, index: number, rawNewValue: string) => {
     const cellState = cells[index].cellstate;
     if(cellState !== CellState.CONSTANT) {
@@ -53,7 +143,6 @@ export const gameReducer = (state = initialState, action:Action) => {
     console.log('game reducer - state: ', state);
     switch(action.type) {
         case GAME_CELL_CHANGE:
-            // handleCellChange(state.game, action.index, action.value);
             return {
                 ...state,
                 cells: handleCellChange(state, action.payload.index, action.payload.value),
@@ -72,9 +161,10 @@ export const gameReducer = (state = initialState, action:Action) => {
             };
         case GAME_CHECK_BOARD:
             // doing nothing for now
-            console.log('check board reducer - doing nothing for now');
+            // console.log('check board reducer - doing nothing for now');
             return {
                 ...state,
+                cells: handleCheckBoardClick(state)
             };
         default:
             return state;

@@ -13,7 +13,7 @@ const Board = ({onCellChange, game}:Props) => {
 
     const handleCellChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const cellValue: string = event.target.value;
-        console.log('Board - cell change, index=' + index + ", val=" + cellValue);
+        // console.log('Board - cell change, index=' + index + ", val=" + cellValue);
         onCellChange(index, cellValue);
     }
 
@@ -39,8 +39,7 @@ const Board = ({onCellChange, game}:Props) => {
         rows.push(renderRow(i));
     }
     return (
-        <div
-            className="numbrix-board">
+        <div className="numbrix-board">
             {rows}
         </div>
     );
