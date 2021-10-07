@@ -49,7 +49,7 @@ const handleCheckBoardClick = ({cells, width, height}:Game) => {
             // console.log("cellIndex=" + cellIndex + ", row=" + row + ", cell=" + col);
             if(cellState === CellState.CONSTANT) {
                 foundCells[cellVal] = cells[cellIndex];
-                const cellsToCheck = getCellsToCheck(cellIndex, width);
+                const cellsToCheck = getCellsToCheck(cellIndex, width, height);
                 let tempCells = [];
                 constantCells.push(cellVal);
                 cellsToCheck.forEach(theIndex => {
@@ -63,7 +63,7 @@ const handleCheckBoardClick = ({cells, width, height}:Game) => {
                 });
             } else if(cellState === CellState.VALID) {
                 foundCells[cellVal] = cells[cellIndex];
-                const cellsToCheck = getCellsToCheck(cellIndex, width);
+                const cellsToCheck = getCellsToCheck(cellIndex, width, height);
                 // compare to neighboring cells. dup cells have already been marked so
                 // now only need to verify that there is at least one neighboring cell that is
                 // +/- 1 of this cell.
@@ -88,22 +88,22 @@ const handleCheckBoardClick = ({cells, width, height}:Game) => {
     return newCells;
 }
 
-// TODO - add height?
-const getCellsToCheck = (index: number, width: number) => {
+export const getCellsToCheck = (index: number, width: number, height: number) => {
     let cellsToCheck = [];
-    if(index >= width) {
+    if(index >= height) {
         // cell above
-        cellsToCheck.push(index - width);
+        cellsToCheck.push(index - height);
     }
-    if(index < width * (width - 1)) {
+    if(index < height * (height - 1)) {
         // cell below
-        cellsToCheck.push(index + width);
+        cellsToCheck.push(index + height);
     }
     if(index % width !== 0) {
         // cell to left
         cellsToCheck.push(index - 1);
     }
     if(index % width !== (width - 1)) {
+        // cell to right
         cellsToCheck.push(index + 1);
     }
     console.log('cells to check, i=' + index + ', cells=' + cellsToCheck);
