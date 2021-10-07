@@ -1,5 +1,5 @@
 import {GAME_CELL_CHANGE, GAME_CHECK_BOARD, GAME_CLEAR_BOARD, GAME_START} from "./gameActions";
-import {Cell, CellState, Game, GameMode} from "../types";
+import {Action, Cell, CellState, Game, GameMode} from "../types";
 
 const initialState = {
     mode: GameMode.SETUP_MODE,
@@ -144,11 +144,6 @@ const handleGameStart = ({width, height, cells}:Game) => {
         }
     }
     return newCells;
-};
-
-type Action = {
-    type: string,
-    payload: any
 };
 
 const isGameReadyToStart = (cells:Cell[]) => {

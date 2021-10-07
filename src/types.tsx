@@ -25,3 +25,10 @@ export enum CellState {
     VALID = 'VALID',
     CONSTANT = 'CONSTANT'
 }
+
+export type Action = {
+    type: string,
+    payload?: any
+};
+
+export type NoArgActionCreator = () => Action;
