@@ -1,4 +1,4 @@
-import {GAME_CELL_CHANGE, GAME_CHECK_BOARD, GAME_CLEAR_BOARD, GAME_START} from "./gameActions";
+import {GAME_CELL_CHANGE, GAME_CHECK_BOARD, GAME_CLEAR_BOARD, GAME_NEW, GAME_START} from "./gameActions";
 import {Action, Cell, CellState, Game, GameMode} from "../types";
 
 const initialState = {
@@ -157,6 +157,11 @@ const isGameReadyToStart = (cells:Cell[]) => {
 export const gameReducer = (state = initialState, action:Action) => {
     console.log('game reducer - action: ', action);
     console.log('game reducer - state: ', state);
+
+    const createEmptyCellArray = (width:number, height:number) => (
+        Array(width * height).fill({value: '', cellstate: CellState.EMPTY})
+    );
+
     switch(action.type) {
         case GAME_CELL_CHANGE:
             return {
@@ -173,12 +178,18 @@ export const gameReducer = (state = initialState, action:Action) => {
                 cells: gameCells,
                 mode: nextMode,
             };
+        case GAME_NEW:
+            return {
+                ...state,
+                cells:createEmptyCellArray(state.width, state.height),
+                mode: GameMode.SETUP_MODE,
+            };
         case GAME_CLEAR_BOARD:
             // TODO - handle differently based on game mode
             return {
                 ...state,
                 mode: GameMode.SETUP_MODE,
-                cells:Array(16).fill({value:'', cellstate:CellState.EMPTY})
+                cells:createEmptyCellArray(state.width, state.height),
             };
         case GAME_CHECK_BOARD:
             // doing nothing for now

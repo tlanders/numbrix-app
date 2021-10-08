@@ -1,18 +1,19 @@
 import React from 'react';
-import {checkBoard, clearBoard, startGame} from "../redux/gameActions";
+import {checkBoard, clearBoard, newGame, startGame} from "../redux/gameActions";
 import {connect} from "react-redux";
 import {Game, GameMode, State} from "../types";
 
 type ButtonClickEventHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
 
 type Props = {
+    onNewGameClick: ButtonClickEventHandler,
     onClearClick: ButtonClickEventHandler,
     onInitClick: ButtonClickEventHandler,
     onCheckClick: ButtonClickEventHandler,
     game: Game
 }
 
-const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}: Props) => {
+const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onCheckClick, game}: Props) => {
     // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
     const hasGameStarted = game.mode === GameMode.PLAY_MODE;
@@ -20,6 +21,11 @@ const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}
     return (
         <div className="numbrix-status">
             <p className="status-msg">{hasGameStarted ? <span>Game in Progress...</span> : <span>Please Setup Game</span>}</p>
+            <button
+                className="status-btn"
+                onClick={onNewGameClick}
+                disabled={!hasGameStarted}
+            >New Game</button>
             <button className="status-btn" onClick={onClearClick}>Clear Board</button>
             <button
                 className="status-btn"
@@ -36,6 +42,10 @@ const Status: React.FC<Props> = ({onClearClick, onInitClick, onCheckClick, game}
 }
 
 const mapDispatchToProps = (dispatch: any) => ({
+    onNewGameClick: () => {
+        console.log('dispatching new game');
+        dispatch(newGame());
+    },
     onClearClick: () => {
         console.log('dispatching clear board');
         dispatch(clearBoard());

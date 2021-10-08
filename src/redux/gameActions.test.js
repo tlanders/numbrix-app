@@ -4,8 +4,8 @@ import {
   checkBoard,
   clearBoard,
   GAME_CELL_CHANGE, GAME_CHECK_BOARD,
-  GAME_CLEAR_BOARD,
-  GAME_START,
+  GAME_CLEAR_BOARD, GAME_NEW,
+  GAME_START, newGame,
   startGame
 } from "./gameActions";
 
@@ -23,6 +23,12 @@ describe("action creator tests", () => {
     const clearBoardAction = clearBoard();
     expect(clearBoardAction).hasOwnProperty("type");
     expect(clearBoardAction.type).toBe(GAME_CLEAR_BOARD);
+  });
+
+  test("creates start game action", () => {
+    const action = newGame();
+    expect(action).hasOwnProperty("type");
+    expect(action.type).toBe(GAME_NEW);
   });
 
   test("creates start game action", () => {
