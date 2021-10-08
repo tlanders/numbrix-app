@@ -1,7 +1,7 @@
 import React from 'react';
 import {gameReducer, getCellsToCheck} from "./gameReducer";
 import {CellState, Cell, GameMode} from "../types";
-import {clearBoard} from "./gameActions";
+import {clearBoard, newGame} from "./gameActions";
 
 describe("get cells to check tests", () => {
     const width = 4;
@@ -71,4 +71,22 @@ describe("reducer - clear board tests", () => {
             expect(newState.cells[i].cellstate).toBe(CellState.EMPTY);
         }
     })
-})
+});
+
+describe("reducer - new game tests", () => {
+    test("basic new game test", ()  => {
+        const width = 4;
+        const height = 4;
+        let cells:Cell[] = EMPTY_BOARD;
+        cells[1] = {cellstate: CellState.VALID, value: '2'};
+        cells[3] = {cellstate: CellState.CONSTANT, value: '4'};
+
+        const newState = gameReducer({mode: GameMode.PLAY_MODE, cells, width, height}, newGame());
+        console.log("new state: ", newState);
+        expect(newState.cells.length).toBe(width * height);
+        for(let i = 0; i < newState.cells.length; i++) {
+            expect(newState.cells[i].value).toBe("");
+            expect(newState.cells[i].cellstate).toBe(CellState.EMPTY);
+        }
+    })
+});
