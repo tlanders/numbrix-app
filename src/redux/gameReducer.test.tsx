@@ -59,11 +59,15 @@ const EMPTY_BOARD: Cell[] = [
     {cellstate: CellState.EMPTY, value: ""}
 ] ;
 
+function createGameState(mode: GameMode, cells:Cell[], width: number, height: number) {
+    return {mode, cells, width, height};
+}
+
 describe("reducer - clear board tests", () => {
     test("basic clear board test", ()  => {
         const width = 4;
         const height = 4;
-        const newState = gameReducer({mode: GameMode.SETUP_MODE, cells: EMPTY_BOARD, width, height}, clearBoard());
+        const newState = gameReducer(createGameState(GameMode.SETUP_MODE, EMPTY_BOARD, width, height), clearBoard());
         console.log("new state: " , newState);
         expect(newState.cells.length).toBe(width * height);
         for(let i = 0; i < newState.cells.length; i++) {
@@ -81,7 +85,7 @@ describe("reducer - new game tests", () => {
         cells[1] = {cellstate: CellState.VALID, value: '2'};
         cells[3] = {cellstate: CellState.CONSTANT, value: '4'};
 
-        const newState = gameReducer({mode: GameMode.PLAY_MODE, cells, width, height}, newGame());
+        const newState = gameReducer(createGameState(GameMode.PLAY_MODE, cells, width, height), newGame());
         console.log("new state: ", newState);
         expect(newState.cells.length).toBe(width * height);
         for(let i = 0; i < newState.cells.length; i++) {
