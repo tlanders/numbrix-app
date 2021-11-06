@@ -15,14 +15,20 @@ const isValidCell = (c:Cell) => isValidCellState(c.cellstate);
 const isInvalidCellState = (cs:CellState) => cs === CellState.INVALID;
 const isInvalidCell = (c:Cell) => isInvalidCellState(c.cellstate);
 
+/*
+* Marks duplicate cells as invalid.
+* Returns true if no duplicate cells are found.
+ */
 const markDuplicateCells = (cells:Cell[], count:number) => {
     let foundCells:Cell[] = [];
+    let foundDuplicates : boolean = false;
     for(let i = 0; i < count; i++) {
         let currentCell = cells[i];
-        if(isValidCell(currentCell) || isConstantCell(currentCell)) {
+        if(currentCell.value !== '') {
             const currentVal = Number(currentCell.value);
             if (foundCells[currentVal]) {
                 currentCell.cellstate = CellState.INVALID;
+                foundDuplicates = true;
                 if (!isConstantCell(foundCells[currentVal])) {
                     foundCells[currentVal].cellstate = CellState.INVALID;
                 }
@@ -31,6 +37,7 @@ const markDuplicateCells = (cells:Cell[], count:number) => {
             }
         }
     }
+    return !foundDuplicates;
 };
 
 const handleCheckBoardClick = ({cells, width, height}:Game) => {
@@ -137,10 +144,12 @@ const handleCellChange = ({cells, width, height}:Game, index: number, rawNewValu
 
 const handleGameStart = ({width, height, cells}:Game) => {
     const newCells = cells.slice();
-    markDuplicateCells(newCells, width * height);
-    for(let i = 0; i < width * height; i++) {
-        if(newCells[i].value !== '' && !isInvalidCell(newCells[i])) {
-            newCells[i].cellstate = CellState.CONSTANT;
+    newCells.forEach(c => c.cellstate = c.value !== '' ? CellState.VALID : CellState.EMPTY);
+    if(markDuplicateCells(newCells, width * height)) {
+        for (let i = 0; i < width * height; i++) {
+            if (newCells[i].value !== '' && !isInvalidCell(newCells[i])) {
+                newCells[i].cellstate = CellState.CONSTANT;
+            }
         }
     }
     return newCells;
@@ -169,8 +178,9 @@ export const gameReducer = (state = initialState, action:Action) => {
                 cells: handleCellChange(state, action.payload.index, action.payload.value),
             };
         case GAME_START:
-            // TODO - need to verify that there are no duplicates and that cells are either valid
-            //   or have an empty spot next to them.
+            // TODO - need that cells are either valid or have an empty spot next to them.
+            // TODO - verify that cells with all adjacent spots filled have a path in and out.
+            // TODO - on game start only mark cells as constant if no errors are found.
             const gameCells = handleGameStart(state);
             const nextMode = isGameReadyToStart(gameCells) ? GameMode.PLAY_MODE : GameMode.SETUP_MODE;
             return {
