@@ -185,12 +185,19 @@ export const gameReducer = (state = initialState, action:Action) => {
                 mode: GameMode.SETUP_MODE,
             };
         case GAME_CLEAR_BOARD:
-            // TODO - handle differently based on game mode
-            return {
-                ...state,
-                mode: GameMode.SETUP_MODE,
-                cells:createEmptyCellArray(state.width, state.height),
-            };
+            if(state.mode === GameMode.SETUP_MODE) {
+                // stay in setup mode and clear all cells
+                return {
+                    ...state,
+                    cells: createEmptyCellArray(state.width, state.height),
+                };
+            } else {
+                // stay in play. clear all non-constant cells.
+                return {
+                    ...state,
+                    cells: clearNonConstantCells(state),
+                };
+            }
         case GAME_CHECK_BOARD:
             // doing nothing for now
             // console.log('check board reducer - doing nothing for now');
@@ -201,4 +208,15 @@ export const gameReducer = (state = initialState, action:Action) => {
         default:
             return state;
     }
+}
+
+const clearNonConstantCells = ({cells} : Game) => {
+    const newCells = cells.slice();
+    for(let i = 0; i < cells.length; i++) {
+        if(newCells[i].cellstate != CellState.CONSTANT) {
+            newCells[i].cellstate = CellState.EMPTY;
+            newCells[i].value = '';
+        }
+    }
+    return newCells;
 }
