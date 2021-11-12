@@ -19,10 +19,10 @@ const isInvalidCell = (c:Cell) => isInvalidCellState(c.cellstate);
 * Marks duplicate cells as invalid.
 * Returns true if no duplicate cells are found.
  */
-const markDuplicateCells = (cells:Cell[], count:number) => {
+const markDuplicateCells = (cells:Cell[]) => {
     let foundCells:Cell[] = [];
     let foundDuplicates : boolean = false;
-    for(let i = 0; i < count; i++) {
+    for(let i = 0; i < cells.length; i++) {
         let currentCell = cells[i];
         if(currentCell.value !== '') {
             const currentVal = Number(currentCell.value);
@@ -40,16 +40,20 @@ const markDuplicateCells = (cells:Cell[], count:number) => {
     return !foundDuplicates;
 };
 
+function getCellIndex(row: number, col: number, width: number) {
+    return row * width + col;
+}
+
 const handleCheckBoardClick = ({cells, width, height}:Game) => {
     console.log("check board clicked");
     const newCells = cells.slice();
     let constantCells = [];
     let foundCells = [];
-    markDuplicateCells(newCells, width * height);
+    markDuplicateCells(newCells);
     // let otherCells = [];
     for(let row = 0; row < height; row++) {
         for(let col = 0; col < width; col++) {
-            const cellIndex = row * width + col;
+            const cellIndex = getCellIndex(row, col, width);
             const cellVal = Number(newCells[cellIndex].value);
             const cellState = newCells[cellIndex].cellstate;
 
@@ -144,16 +148,54 @@ const handleCellChange = ({cells, width, height}:Game, index: number, rawNewValu
 
 const handleGameStart = ({width, height, cells}:Game) => {
     const newCells = cells.slice();
+    // initially all cells are valid or empty
     newCells.forEach(c => c.cellstate = c.value !== '' ? CellState.VALID : CellState.EMPTY);
-    if(markDuplicateCells(newCells, width * height)) {
+
+    // first look for duplicate cells
+    const noDuplicatesFound: boolean = markDuplicateCells(newCells);
+    if(noDuplicatesFound) {
+        // next look for invalid cells
+        markInvalidCells(newCells, width, height);
+
         for (let i = 0; i < width * height; i++) {
             if (newCells[i].value !== '' && !isInvalidCell(newCells[i])) {
                 newCells[i].cellstate = CellState.CONSTANT;
             }
         }
     }
+
     return newCells;
 };
+
+export const anyCellsHaveValue = (cellValue: number, cells:Cell[], cellsToCheck:number[]) => {
+    const cellWithValue = cellsToCheck.find((val, index, arr) =>
+        cells[val].value === cellValue.toString() && cells[val].cellstate !== CellState.INVALID && cells[val].cellstate !== CellState.EMPTY);
+    console.log("anyHaveValue, cellWithVal=", cellWithValue);
+    return cellWithValue !== undefined && cellWithValue >= 0;
+}
+
+export const anyCellsAreEmptyOrInvalid = (cells:Cell[], cellsToCheck:number[]) => {
+    return !cellsToCheck.every((val, index, arr) => cells[val].value !== ''
+        && cells[val].cellstate !== CellState.INVALID
+        && cells[val].cellstate !== CellState.EMPTY);
+}
+
+const markInvalidCells = (cells:Cell[], width:number, height:number) => {
+    for(let row = 0; row < height; row++) {
+        for(let col = 0; col < width; col++) {
+            const index = getCellIndex(row, col, width);
+            const cellsToCheck:number[] = getCellsToCheck(index, width, height);
+            const cell:Cell = cells[index];
+            if(cell.cellstate === CellState.VALID) {
+                if(!anyCellsAreEmptyOrInvalid(cells, cellsToCheck)
+                    && !anyCellsHaveValue(parseInt(cell.value) - 1, cells, cellsToCheck)
+                    && !anyCellsHaveValue(parseInt(cell.value) + 1, cells, cellsToCheck)) {
+                    cell.cellstate = CellState.INVALID;
+                }
+            }
+        }
+    }
+}
 
 const isGameReadyToStart = (cells:Cell[]) => {
     for(let i = 0; i < cells.length; i++) {
@@ -180,7 +222,6 @@ export const gameReducer = (state = initialState, action:Action) => {
         case GAME_START:
             // TODO - need that cells are either valid or have an empty spot next to them.
             // TODO - verify that cells with all adjacent spots filled have a path in and out.
-            // TODO - on game start only mark cells as constant if no errors are found.
             const gameCells = handleGameStart(state);
             const nextMode = isGameReadyToStart(gameCells) ? GameMode.PLAY_MODE : GameMode.SETUP_MODE;
             return {
