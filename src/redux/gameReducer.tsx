@@ -155,11 +155,14 @@ const handleGameStart = ({width, height, cells}:Game) => {
     const noDuplicatesFound: boolean = markDuplicateCells(newCells);
     if(noDuplicatesFound) {
         // next look for invalid cells
-        markInvalidCells(newCells, width, height);
+        const allValid: boolean = markInvalidCells(newCells, width, height);
+        console.log("===== done marking invalid cells - all valid=", allValid);
 
-        for (let i = 0; i < width * height; i++) {
-            if (newCells[i].value !== '' && !isInvalidCell(newCells[i])) {
-                newCells[i].cellstate = CellState.CONSTANT;
+        if(allValid) {
+            for (let i = 0; i < width * height; i++) {
+                if (newCells[i].value !== '' && !isInvalidCell(newCells[i])) {
+                    newCells[i].cellstate = CellState.CONSTANT;
+                }
             }
         }
     }
@@ -170,8 +173,8 @@ const handleGameStart = ({width, height, cells}:Game) => {
 export const anyCellsHaveValue = (cellValue: number, cells:Cell[], cellsToCheck:number[]) => {
     const cellWithValue = cellsToCheck.find((val, index, arr) =>
         cells[val].value === cellValue.toString() && cells[val].cellstate !== CellState.INVALID && cells[val].cellstate !== CellState.EMPTY);
-    console.log("anyHaveValue, cellWithVal=", cellWithValue);
-    return cellWithValue !== undefined && cellWithValue >= 0;
+    console.log("anyHaveValue, found cellWithVal=", cellWithValue);
+    return cellWithValue !== undefined && cellWithValue > 0;
 }
 
 export const anyCellsAreEmptyOrInvalid = (cells:Cell[], cellsToCheck:number[]) => {
@@ -180,21 +183,50 @@ export const anyCellsAreEmptyOrInvalid = (cells:Cell[], cellsToCheck:number[]) =
         && cells[val].cellstate !== CellState.EMPTY);
 }
 
+/**
+ * Marks invalid cells. Invalid cells have all spots around them filled but don't have a cell that is one less and a
+ * cell that is one more than them. If a cell has an empty cell around it then it is not considered invalid for this check.
+ * @param cells
+ * @param width
+ * @param height
+ * @return true if all are valid, false otherwise.
+ */
 const markInvalidCells = (cells:Cell[], width:number, height:number) => {
+    let allValid:boolean = true;
     for(let row = 0; row < height; row++) {
         for(let col = 0; col < width; col++) {
             const index = getCellIndex(row, col, width);
             const cellsToCheck:number[] = getCellsToCheck(index, width, height);
             const cell:Cell = cells[index];
             if(cell.cellstate === CellState.VALID) {
-                if(!anyCellsAreEmptyOrInvalid(cells, cellsToCheck)
-                    && !anyCellsHaveValue(parseInt(cell.value) - 1, cells, cellsToCheck)
-                    && !anyCellsHaveValue(parseInt(cell.value) + 1, cells, cellsToCheck)) {
-                    cell.cellstate = CellState.INVALID;
+                if(!anyCellsAreEmptyOrInvalid(cells, cellsToCheck)) {
+                    const anyAreMinusOne:boolean = anyCellsHaveValue(parseInt(cell.value) - 1, cells, cellsToCheck);
+                    const anyArePlusOne:boolean = anyCellsHaveValue(parseInt(cell.value) + 1, cells, cellsToCheck);
+                    console.log(`  cell ${index} - anyMinusOne=${anyAreMinusOne}, anyPlusOne=${anyArePlusOne}`);
+                    if(cell.value === '1') {
+                        if(!anyArePlusOne) {
+                            console.log(`one val cell ${index} is invalid`);
+                            cell.cellstate = CellState.INVALID;
+                            allValid = false;
+                        }
+                    } else if(cell.value === `${width * height - 1}`) {
+                        if(!anyAreMinusOne) {
+                            console.log(`max val cell ${index} is invalid`);
+                            cell.cellstate = CellState.INVALID;
+                            allValid = false;
+                        }
+                    } else {
+                        if (!(anyAreMinusOne && anyArePlusOne)) {
+                            console.log(`cell ${index} is invalid`);
+                            cell.cellstate = CellState.INVALID;
+                            allValid = false;
+                        }
+                    }
                 }
             }
         }
     }
+    return allValid;
 }
 
 const isGameReadyToStart = (cells:Cell[]) => {
@@ -264,7 +296,7 @@ export const gameReducer = (state = initialState, action:Action) => {
 const clearNonConstantCells = ({cells} : Game) => {
     const newCells = cells.slice();
     for(let i = 0; i < cells.length; i++) {
-        if(newCells[i].cellstate != CellState.CONSTANT) {
+        if(newCells[i].cellstate !== CellState.CONSTANT) {
             newCells[i].cellstate = CellState.EMPTY;
             newCells[i].value = '';
         }
