@@ -17,25 +17,40 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
     // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
     const hasGameStarted = game.mode === GameMode.PLAY_MODE;
+    let message = 'Game in Progress...';
+    if(game.mode === GameMode.SETUP_MODE) {
+        message = 'Please Setup Game';
+    } else if(game.mode === GameMode.GAME_OVER_MODE) {
+        message = 'Congratulations! You win!';
+    }
+
+    const newButton = game.mode === GameMode.SETUP_MODE ? '' : (
+        <button
+            className="status-btn"
+            onClick={onNewGameClick}
+        >New Game</button>
+    );
+    const startButton = game.mode !== GameMode.SETUP_MODE ? '' : (
+        <button
+            className="status-btn"
+            onClick={onInitClick}
+        >Start Game</button>
+    );
 
     return (
         <div className="numbrix-status">
-            <p className="status-msg">{hasGameStarted ? <span>Game in Progress...</span> : <span>Please Setup Game</span>}</p>
+            <p className="status-msg"><span>{message}</span></p>
+            {newButton}
+            {startButton}
             <button
                 className="status-btn"
-                onClick={onNewGameClick}
-                disabled={!hasGameStarted}
-            >New Game</button>
-            <button className="status-btn" onClick={onClearClick}>Clear Board</button>
-            <button
-                className="status-btn"
-                onClick={onInitClick}
-                disabled={hasGameStarted}
-            >Start Game</button>
+                onClick={onClearClick}
+                disabled={game.mode === GameMode.GAME_OVER_MODE}
+            >Clear Board</button>
             <button
                 className="status-btn"
                 onClick={onCheckClick}
-                disabled={!hasGameStarted}
+                disabled={game.mode !== GameMode.PLAY_MODE}
             >Check Board</button>
         </div>
     );

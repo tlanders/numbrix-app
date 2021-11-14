@@ -1,17 +1,17 @@
 import {GAME_CELL_CHANGE, GAME_CHECK_BOARD, GAME_CLEAR_BOARD, GAME_NEW, GAME_START} from "./gameActions";
 import {Action, Cell, CellState, Game, GameMode} from "../types";
 
-const initialState = {
-    mode: GameMode.SETUP_MODE,
-    width: 3,
-    height: 3,
-    cells:Array(16).fill({value:'', cellstate:CellState.EMPTY})
-};
+export const createEmptyGameState = (width:number, height:number, mode = GameMode.SETUP_MODE) => ({
+    mode,
+    width,
+    height,
+    cells:Array(width * height).fill({value:'', cellstate:CellState.EMPTY})
+});
+
+const initialState = createEmptyGameState(3, 3);
 
 const isConstantCellState = (cs:CellState) => cs === CellState.CONSTANT;
 const isConstantCell = (c:Cell) => isConstantCellState(c.cellstate);
-// const isValidCellState = (cs:CellState) => cs === CellState.VALID;
-// const isValidCell = (c:Cell) => isValidCellState(c.cellstate);
 const isInvalidCellState = (cs:CellState) => cs === CellState.INVALID;
 const isInvalidCell = (c:Cell) => isInvalidCellState(c.cellstate);
 
@@ -20,6 +20,7 @@ const isInvalidCell = (c:Cell) => isInvalidCellState(c.cellstate);
 * Returns true if no duplicate cells are found.
  */
 const markDuplicateCells = (cells:Cell[]) => {
+    console.log('marking duplicate cells');
     let foundCells:Cell[] = [];
     let foundDuplicates : boolean = false;
     for(let i = 0; i < cells.length; i++) {
@@ -27,8 +28,10 @@ const markDuplicateCells = (cells:Cell[]) => {
         if(currentCell.value !== '') {
             const currentVal = Number(currentCell.value);
             if (foundCells[currentVal]) {
-                currentCell.cellstate = CellState.INVALID;
                 foundDuplicates = true;
+                if(!isConstantCell(currentCell)) {
+                    currentCell.cellstate = CellState.INVALID;
+                }
                 if (!isConstantCell(foundCells[currentVal])) {
                     foundCells[currentVal].cellstate = CellState.INVALID;
                 }
@@ -37,6 +40,7 @@ const markDuplicateCells = (cells:Cell[]) => {
             }
         }
     }
+    console.log('done marking duplicate cells, result=', !foundDuplicates);
     return !foundDuplicates;
 };
 
@@ -44,15 +48,31 @@ function getCellIndex(row: number, col: number, width: number) {
     return row * width + col;
 }
 
-const handleCheckBoardClick = ({cells, width, height}:Game) => {
+const handleCheckBoardClick = ({cells, width, height, mode}:Game) => {
     console.log("check board clicked");
     const newCells = cells.slice();
-    let constantCells = [];
-    let foundCells = [];
-    if(markDuplicateCells(newCells) && markInvalidCells(cells, width, height)) {
+    let newMode = mode;
+    if(markDuplicateCells(newCells)
+            && markInvalidCells(cells, width, height)
+            && allCellsAreValidOrConstant(cells)) {
         console.log('===== game finished successfully =====');
+        newMode = GameMode.GAME_OVER_MODE;
     }
-    return newCells;
+    return {
+        cells: newCells,
+        mode: newMode
+    };
+}
+
+const allCellsAreValidOrConstant = (cells:Cell[]) => {
+    console.log('allCellsAreValidOrConstant');
+    for(let i = 0; i < cells.length; i++) {
+        if(cells[i].cellstate !== CellState.VALID && cells[i].cellstate !== CellState.CONSTANT) {
+            console.log(`allCellsAreValidOrConstant - cell ${i} not valid or constant`);
+            return false;
+        }
+    }
+    return true;
 }
 
 export const getCellsToCheck = (index: number, width: number, height: number) => {
@@ -150,6 +170,7 @@ export const anyCellsAreEmptyOrInvalid = (cells:Cell[], cellsToCheck:number[]) =
  * @return true if all are valid, false otherwise.
  */
 const markInvalidCells = (cells:Cell[], width:number, height:number) => {
+    console.log('markInvalidCells');
     let allValid:boolean = true;
     for(let row = 0; row < height; row++) {
         for(let col = 0; col < width; col++) {
@@ -167,7 +188,7 @@ const markInvalidCells = (cells:Cell[], width:number, height:number) => {
                             cell.cellstate = CellState.INVALID;
                             allValid = false;
                         }
-                    } else if(cell.value === `${width * height - 1}`) {
+                    } else if(cell.value === `${width * height}`) {
                         if(!anyAreMinusOne) {
                             console.log(`max val cell ${index} is invalid`);
                             cell.cellstate = CellState.INVALID;
@@ -182,6 +203,7 @@ const markInvalidCells = (cells:Cell[], width:number, height:number) => {
             }
         }
     }
+    console.log('markInvalidCells, result=', allValid);
     return allValid;
 }
 
@@ -240,9 +262,11 @@ export const gameReducer = (state = initialState, action:Action) => {
         case GAME_CHECK_BOARD:
             // doing nothing for now
             // console.log('check board reducer - doing nothing for now');
+            const {cells, mode} = handleCheckBoardClick(state);
             return {
                 ...state,
-                cells: handleCheckBoardClick(state)
+                cells,
+                mode,
             };
         default:
             return state;

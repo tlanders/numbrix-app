@@ -17,6 +17,7 @@ export type State = {
 export enum GameMode {
     SETUP_MODE = 'SETUP_MODE',
     PLAY_MODE = 'PLAY_MODE',
+    GAME_OVER_MODE = 'GAME_OVER_MODE',
 };
 
 export enum CellState {
