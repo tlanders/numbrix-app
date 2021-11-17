@@ -41,7 +41,7 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
 
     return (
         <div className={"row"}>
-            <div className="numbrix-status col-12">
+            <div className="numbrix-status col-md-6 col-sm-12 mx-auto">
                 <p className="status-msg"><span>{message}</span></p>
                 {newButton}
                 {startButton}

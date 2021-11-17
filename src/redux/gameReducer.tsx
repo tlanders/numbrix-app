@@ -52,6 +52,11 @@ const handleCheckBoardClick = ({cells, width, height, mode}:Game) => {
     console.log("check board clicked");
     const newCells = cells.slice();
     let newMode = mode;
+    newCells.forEach(cell => {
+        if(cell.cellstate === CellState.INVALID) {
+            cell.cellstate = CellState.VALID;
+        }
+    })
     if(markDuplicateCells(newCells)
             && markInvalidCells(cells, width, height)
             && allCellsAreValidOrConstant(cells)) {

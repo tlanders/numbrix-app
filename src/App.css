@@ -1,3 +1,7 @@
+body {
+  background-color: lightgray;
+}
+
 .App {
   text-align: center;
 }
@@ -8,10 +12,10 @@ div.numbrix-status {
 
 p.status-msg {
   padding: 5px 0 5px;
-  background-color: lightpink;
+  background-color: yellow;
 }
 
-button.numbrix-cell, input.numbrix-cell {
+.numbrix-cell, .numbrix-cell-error, .numbrix-cell-constant {
   height: 50px;
   width: 50px;
   text-align: center;
@@ -22,37 +26,19 @@ button.status-btn {
   padding: 5px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.numbrix-cell:hover {
+  background-color: lightblue;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.numbrix-cell-error {
+  background-color: lightpink;
+  font-weight: bold;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.numbrix-cell-error:hover {
+  background-color: #dd6666;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.numbrix-cell-constant {
+  font-weight: bold;
 }

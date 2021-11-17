@@ -10,10 +10,9 @@ type Props = {
 const Cell = ({cellstate, value, onChange} : Props) => {
     if(cellstate === CellState.CONSTANT) {
         return (
-            <input className="numbrix-cell"
+            <input className="numbrix-cell-constant"
                    type="text"
                    value={value}
-                   style={{fontWeight:"bold"}}
                    onChange={onChange}/>
         );
     } else if(cellstate === CellState.VALID) {
@@ -32,10 +31,9 @@ const Cell = ({cellstate, value, onChange} : Props) => {
         );
     } else if(cellstate === CellState.INVALID) {
         return (
-            <input className="numbrix-cell"
+            <input className="numbrix-cell-error"
                    type="text"
                    value={value}
-                   style={{color:'red'}}
                    onChange={onChange}/>
         );
     } else {

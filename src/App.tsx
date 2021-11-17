@@ -1,9 +1,9 @@
-import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import React from 'react';
 import Numbrix from "./components/Numbrix";
 import {Provider} from "react-redux";
 import {store} from "./redux/store";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
