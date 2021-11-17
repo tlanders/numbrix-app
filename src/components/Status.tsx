@@ -26,32 +26,38 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
 
     const newButton = game.mode === GameMode.SETUP_MODE ? '' : (
         <button
-            className="status-btn"
+            type={"button"}
+            className="status-btn btn btn-primary"
             onClick={onNewGameClick}
         >New Game</button>
     );
     const startButton = game.mode !== GameMode.SETUP_MODE ? '' : (
         <button
-            className="status-btn"
+            type={"button"}
+            className="status-btn btn btn-primary"
             onClick={onInitClick}
         >Start Game</button>
     );
 
     return (
-        <div className="numbrix-status">
-            <p className="status-msg"><span>{message}</span></p>
-            {newButton}
-            {startButton}
-            <button
-                className="status-btn"
-                onClick={onClearClick}
-                disabled={game.mode === GameMode.GAME_OVER_MODE}
-            >Clear Board</button>
-            <button
-                className="status-btn"
-                onClick={onCheckClick}
-                disabled={game.mode !== GameMode.PLAY_MODE}
-            >Check Board</button>
+        <div className={"row"}>
+            <div className="numbrix-status col-12">
+                <p className="status-msg"><span>{message}</span></p>
+                {newButton}
+                {startButton}
+                <button
+                    type={"button"}
+                    className="status-btn btn btn-primary"
+                    onClick={onClearClick}
+                    disabled={game.mode === GameMode.GAME_OVER_MODE}
+                >Clear Board</button>
+                <button
+                    type={"button"}
+                    className="status-btn btn btn-primary"
+                    onClick={onCheckClick}
+                    disabled={game.mode !== GameMode.PLAY_MODE}
+                >Check Board</button>
+            </div>
         </div>
     );
 }

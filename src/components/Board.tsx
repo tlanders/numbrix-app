@@ -27,8 +27,10 @@ const Board = ({onCellChange, game}:Props) => {
                                    onChange={(evt : React.ChangeEvent<HTMLInputElement>) => handleCellChange(index, evt)}/>)
         }
         return (
-            <div className="numbrix-row" key={rowNum}>
-                {renderCells}
+            <div className="numbrix-row row" key={rowNum}>
+                <div className={"col-xs-3 mx-auto"}>
+                    {renderCells}
+                </div>
             </div>
         );
     }
@@ -39,8 +41,10 @@ const Board = ({onCellChange, game}:Props) => {
         rows.push(renderRow(i));
     }
     return (
-        <div className="numbrix-board">
-            {rows}
+        <div className="numbrix-board row">
+            <div className={"col-12"}>
+                {rows}
+            </div>
         </div>
     );
 }

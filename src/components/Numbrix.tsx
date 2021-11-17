@@ -5,7 +5,11 @@ import Status from "./Status";
 const Numbrix = () => {
     return (
         <div className="numbrix">
-            <h1>Welcome to Numbrix!</h1>
+            <div className={"row"}>
+                <div className={"col-12"}>
+                    <h1>Welcome to Numbrix!</h1>
+                </div>
+            </div>
             <div>
                 <Status/>
                 <Board/>
