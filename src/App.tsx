@@ -13,7 +13,7 @@ function App() {
             <Numbrix/>
             <div className={"container"}>
                 <div className={"row"}>
-                    <div className={"col-md-3 mx-auto mt-3"}>
+                    <div className={"col-md-2 mx-auto mt-3"}>
                         <AmplifySignOut />
                     </div>
                 </div>
