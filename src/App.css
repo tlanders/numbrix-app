@@ -32,7 +32,6 @@ button.status-btn {
 
 .numbrix-cell-error {
   background-color: lightpink;
-  font-weight: bold;
 }
 
 .numbrix-cell-error:hover {
