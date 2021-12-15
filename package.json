@@ -11,6 +11,7 @@
     "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
     "@types/react-redux": "^7.1.18",
+    "aws-sdk": "^2.1046.0",
     "bootstrap": "^5.1.3",
     "bootstrap-icons": "^1.7.1",
     "express": "^4.17.1",
@@ -29,6 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "deploy": "aws s3 sync build/ s3://numbrix-s3-web.lcidev.com --acl public-read",
+    "server": "node server.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
