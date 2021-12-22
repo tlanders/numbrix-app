@@ -16,7 +16,6 @@ type Props = {
 const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onCheckClick, game}: Props) => {
     // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
-    const hasGameStarted = game.mode === GameMode.PLAY_MODE;
     let message = 'Game in Progress...';
     if(game.mode === GameMode.SETUP_MODE) {
         message = 'Please Setup Game';
