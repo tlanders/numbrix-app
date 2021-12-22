@@ -23,6 +23,10 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
         message = 'Congratulations! You win!';
     }
 
+    const onConfigureClick:ButtonClickEventHandler = () => {
+        console.log('onConfigureClick');
+    };
+
     const newButton = game.mode === GameMode.SETUP_MODE ? '' : (
         <button
             type={"button"}
@@ -37,6 +41,33 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
             onClick={onInitClick}
         >Start Game</button>
     );
+    const configureButton = game.mode === GameMode.SETUP_MODE ? (
+        <button
+            type={"button"}
+            className="status-btn btn btn-primary"
+            onClick={onConfigureClick}
+        >Configure Board</button>
+    ) : (
+        ''
+    );
+    const checkBoardButton = game.mode === GameMode.PLAY_MODE ? (
+        <button
+            type={"button"}
+            className="status-btn btn btn-primary"
+            onClick={onCheckClick}
+        >Check Board</button>
+    ) : (
+        ''
+    );
+    const clearBoardButton = game.mode !== GameMode.GAME_OVER_MODE ? (
+        <button
+            type={"button"}
+            className="status-btn btn btn-primary"
+            onClick={onClearClick}
+        >Clear Board</button>
+    ) : (
+        ''
+    );
 
     return (
         <div className={"row"}>
@@ -44,18 +75,9 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
                 <p className="status-msg"><span>{message}</span></p>
                 {newButton}
                 {startButton}
-                <button
-                    type={"button"}
-                    className="status-btn btn btn-primary"
-                    onClick={onClearClick}
-                    disabled={game.mode === GameMode.GAME_OVER_MODE}
-                >Clear Board</button>
-                <button
-                    type={"button"}
-                    className="status-btn btn btn-primary"
-                    onClick={onCheckClick}
-                    disabled={game.mode !== GameMode.PLAY_MODE}
-                >Check Board</button>
+                {configureButton}
+                {checkBoardButton}
+                {clearBoardButton}
             </div>
         </div>
     );
