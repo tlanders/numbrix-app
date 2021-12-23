@@ -70,16 +70,46 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
     );
 
     return (
-        <div className={"row"}>
-            <div className="numbrix-status col-md-6 col-sm-12 mx-auto">
-                <p className="status-msg"><span>{message}</span></p>
-                {newButton}
-                {startButton}
-                {configureButton}
-                {checkBoardButton}
-                {clearBoardButton}
+        <>
+            <div className={"row"}>
+                <div className="numbrix-status col-md-6 col-sm-12 mx-auto">
+                    <p className="status-msg"><span>{message}</span></p>
+                    {newButton}
+                    {startButton}
+                    {configureButton}
+                    {checkBoardButton}
+                    {clearBoardButton}
+                </div>
             </div>
-        </div>
+            <div className={"row"}>
+                <div className={"configureArea p-1 pt-3 col-md-4 col-sm-8 mx-auto"}>
+                    <div className={"row"}>
+                        <div className={"col-4"}>
+                            <label htmlFor={"rows"}>Rows:&nbsp;</label>
+                            <input type={"text"} size={2} name={"rows"} maxLength={2}/>
+                        </div>
+                        <div className={"col-4"}>
+                            <label htmlFor={"columns"}>Columns:&nbsp;</label>
+                            <input type={"text"} size={2} name={"columns"} maxLength={2}/>
+                        </div>
+                        <div className={"col-2"}>
+                            <button
+                                type={"button"}
+                                className="status-btn btn btn-sm btn-primary"
+                                // onClick={onClearClick}
+                            >Save</button>
+                        </div>
+                        <div className={"col-2"}>
+                            <button
+                                type={"button"}
+                                className="status-btn btn btn-sm btn-primary"
+                                // onClick={onClearClick}
+                            >Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
 
