@@ -1,5 +1,5 @@
 import React from 'react';
-import {checkBoard, clearBoard, newGame, startGame} from "../redux/gameActions";
+import {checkBoard, clearBoard, configureBoard, newGame, startGame} from "../redux/gameActions";
 import {connect} from "react-redux";
 import {Game, GameMode, State} from "../types";
 
@@ -10,10 +10,11 @@ type Props = {
     onClearClick: ButtonClickEventHandler,
     onInitClick: ButtonClickEventHandler,
     onCheckClick: ButtonClickEventHandler,
+    onConfigureClick: ButtonClickEventHandler,
     game: Game
 }
 
-const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onCheckClick, game}: Props) => {
+const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onCheckClick, onConfigureClick, game}: Props) => {
     // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
     let message = 'Game in Progress...';
@@ -23,9 +24,9 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
         message = 'Congratulations! You win!';
     }
 
-    const onConfigureClick:ButtonClickEventHandler = () => {
-        console.log('onConfigureClick');
-    };
+    // const onConfigureClick:ButtonClickEventHandler = () => {
+    //     console.log('onConfigureClick');
+    // };
 
     const newButton = game.mode === GameMode.SETUP_MODE ? '' : (
         <button
@@ -46,7 +47,7 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
             type={"button"}
             className="status-btn btn btn-primary"
             onClick={onConfigureClick}
-        >Configure Board</button>
+        >Resize Board</button>
     ) : (
         ''
     );
@@ -129,6 +130,10 @@ const mapDispatchToProps = (dispatch: any) => ({
     onCheckClick: () => {
         console.log('dispatching check board click');
         dispatch(checkBoard());
+    },
+    onConfigureClick: () => {
+        console.log('dispatching configure board click');
+        dispatch(configureBoard());
     }
 });
 

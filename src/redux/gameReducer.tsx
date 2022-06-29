@@ -1,4 +1,11 @@
-import {GAME_CELL_CHANGE, GAME_CHECK_BOARD, GAME_CLEAR_BOARD, GAME_NEW, GAME_START} from "./gameActions";
+import {
+    GAME_CELL_CHANGE,
+    GAME_CHECK_BOARD,
+    GAME_CLEAR_BOARD,
+    GAME_CONFIGURE_BOARD,
+    GAME_NEW,
+    GAME_START
+} from "./gameActions";
 import {Action, Cell, CellState, Game, GameMode} from "../types";
 
 export const createEmptyGameState = (width:number, height:number, mode = GameMode.SETUP_MODE) => ({
@@ -272,6 +279,13 @@ export const gameReducer = (state = initialState, action:Action) => {
                 ...state,
                 cells,
                 mode,
+            };
+        case GAME_CONFIGURE_BOARD:
+            // doing nothing for now
+            console.log('configure board reducer - doing nothing for now');
+            // const {cells, mode} = handleCheckBoardClick(state);
+            return {
+                ...state
             };
         default:
             return state;
