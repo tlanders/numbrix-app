@@ -75,4 +75,4 @@ docker build -f Dockerfile.prod -t my-first-numbrix-app:latest .
 
 ### Run
 
-docker run -it -p 80:80 --rm my-first-numbrix-app:latest
+docker run -it -p 80:80 --rm --name my-first-numbrix-app my-first-numbrix-app:latest
