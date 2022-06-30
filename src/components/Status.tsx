@@ -1,5 +1,5 @@
-import React from 'react';
-import {checkBoard, clearBoard, configureBoard, newGame, startGame} from "../redux/gameActions";
+import React, {ChangeEventHandler, useState} from 'react';
+import {checkBoard, clearBoard, resizeBoard, newGame, startGame} from "../redux/gameActions";
 import {connect} from "react-redux";
 import {Game, GameMode, State} from "../types";
 
@@ -10,23 +10,22 @@ type Props = {
     onClearClick: ButtonClickEventHandler,
     onInitClick: ButtonClickEventHandler,
     onCheckClick: ButtonClickEventHandler,
-    onConfigureClick: ButtonClickEventHandler,
+    onResizeClick: (width:string, height:string) => ButtonClickEventHandler,
     game: Game
 }
 
-const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onCheckClick, onConfigureClick, game}: Props) => {
+const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onCheckClick, onResizeClick, game}: Props) => {
     // const game: Game = useSelector((state:State) => (game: Game): state => state.game);
     // console.log('status - game: ', game);
+    const [width, setWidth] = useState(game.width.toString());
+    const [height, setHeight] = useState(game.height.toString());
+
     let message = 'Game in Progress...';
     if(game.mode === GameMode.SETUP_MODE) {
         message = 'Please Setup Game';
     } else if(game.mode === GameMode.GAME_OVER_MODE) {
         message = 'Congratulations! You win!';
     }
-
-    // const onConfigureClick:ButtonClickEventHandler = () => {
-    //     console.log('onConfigureClick');
-    // };
 
     const newButton = game.mode === GameMode.SETUP_MODE ? '' : (
         <button
@@ -42,11 +41,11 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
             onClick={onInitClick}
         >Start Game</button>
     );
-    const configureButton = game.mode === GameMode.SETUP_MODE ? (
+    const resizeButton = game.mode === GameMode.SETUP_MODE ? (
         <button
             type={"button"}
             className="status-btn btn btn-primary"
-            onClick={onConfigureClick}
+            onClick={onResizeClick(width, height)}
         >Resize Board</button>
     ) : (
         ''
@@ -69,6 +68,14 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
     ) : (
         ''
     );
+    const onWidthChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        console.log('new width=', event.target.value);
+        setWidth(event.target.value);
+    }
+    const onHeightChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        console.log('new height=', event.target.value);
+        setHeight(event.target.value);
+    }
 
     return (
         <>
@@ -77,7 +84,7 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
                     <p className="status-msg"><span>{message}</span></p>
                     {newButton}
                     {startButton}
-                    {configureButton}
+                    {resizeButton}
                     {checkBoardButton}
                     {clearBoardButton}
                 </div>
@@ -87,11 +94,23 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
                     <div className={"row"}>
                         <div className={"col-4"}>
                             <label htmlFor={"rows"}>Rows:&nbsp;</label>
-                            <input type={"text"} size={2} name={"rows"} maxLength={2}/>
+                            <input
+                                type={"text"}
+                                size={2}
+                                name={"rows"}
+                                maxLength={2}
+                                value={height}
+                                onChange={onHeightChange}/>
                         </div>
                         <div className={"col-4"}>
                             <label htmlFor={"columns"}>Columns:&nbsp;</label>
-                            <input type={"text"} size={2} name={"columns"} maxLength={2}/>
+                            <input
+                                type={"text"}
+                                size={2}
+                                name={"columns"}
+                                maxLength={2}
+                                value={width}
+                                onChange={onWidthChange}/>
                         </div>
                         <div className={"col-2"}>
                             <button
@@ -131,9 +150,9 @@ const mapDispatchToProps = (dispatch: any) => ({
         console.log('dispatching check board click');
         dispatch(checkBoard());
     },
-    onConfigureClick: () => {
-        console.log('dispatching configure board click');
-        dispatch(configureBoard());
+    onResizeClick: (width:string, height:string) => () => {
+        console.log('dispatching resize board click');
+        dispatch(resizeBoard(width, height));
     }
 });
 

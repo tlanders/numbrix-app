@@ -2,7 +2,7 @@ import {
     GAME_CELL_CHANGE,
     GAME_CHECK_BOARD,
     GAME_CLEAR_BOARD,
-    GAME_CONFIGURE_BOARD,
+    GAME_RESIZE_BOARD,
     GAME_NEW,
     GAME_START
 } from "./gameActions";
@@ -280,16 +280,18 @@ export const gameReducer = (state = initialState, action:Action) => {
                 cells,
                 mode,
             };
-        case GAME_CONFIGURE_BOARD:
-            // doing nothing for now
-            console.log('configure board reducer - doing nothing for now');
-            // const {cells, mode} = handleCheckBoardClick(state);
-            return {
-                ...state
-            };
+        case GAME_RESIZE_BOARD:
+            const game = handleResizeBoardClick(state, action.payload.width, action.payload.height);
+            console.log('resized game: ', game);
+            return game;
         default:
             return state;
     }
+}
+
+const handleResizeBoardClick = ({cells, width, height, mode}:Game, newWidth:string, newHeight:string) => {
+    console.log("resize board clicked");
+    return createEmptyGameState(parseInt(newWidth), parseInt(newHeight), GameMode.SETUP_MODE);
 }
 
 const clearNonConstantCells = ({cells} : Game) => {

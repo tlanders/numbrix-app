@@ -33,3 +33,4 @@ export type Action = {
 };
 
 export type NoArgActionCreator = () => Action;
+export type ResizeActionCreator = (width:string, height:string) => Action;
