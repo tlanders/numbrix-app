@@ -1,3 +1,5 @@
+import React from "react";
+
 export type Game = {
     mode: GameMode,
     width: number,
@@ -31,6 +33,8 @@ export type Action = {
     type: string,
     payload?: any
 };
+
+export type ButtonClickEventHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
 
 export type NoArgActionCreator = () => Action;
 export type ResizeActionCreator = (width:string, height:string) => Action;

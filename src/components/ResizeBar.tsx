@@ -1,24 +1,47 @@
 import React, {Dispatch, SetStateAction} from "react";
+import {ButtonClickEventHandler, CellState} from "../types";
+import {MAX_ROWS_AND_COLUMNS} from "../constants";
 
 type Props = {
     height: string,
     width: string,
     setWidth: Dispatch<SetStateAction<string>>,
-    setHeight: Dispatch<SetStateAction<string>>
+    setHeight: Dispatch<SetStateAction<string>>,
+    onResizeClick: ButtonClickEventHandler
 }
 
-const ResizeBar = ({height, width, setWidth, setHeight}:Props) => {
+const ResizeBar = ({height, width, setWidth, setHeight, onResizeClick}:Props) => {
+    const isValidRowColValue = (strVal:string) => {
+        if(strVal === '') {
+            return true;
+        } else if (!/^(\d+)$/.test(strVal)) {
+            return false;
+        }
+
+        let newVal = Number(strVal);
+        return newVal >= 2 && newVal <= MAX_ROWS_AND_COLUMNS;
+    }
     const onWidthChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        console.log('new width=', event.target.value);
-        setWidth(event.target.value);
+        if(isValidRowColValue(event.target.value)) {
+            console.log('new width=', event.target.value);
+            setWidth(event.target.value);
+        } else {
+            console.log('not changing width=', width);
+            setWidth(width);
+        }
     }
     const onHeightChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        console.log('new height=', event.target.value);
-        setHeight(event.target.value);
+        if(isValidRowColValue(event.target.value)) {
+            console.log('new height=', event.target.value);
+            setHeight(event.target.value);
+        } else {
+            console.log('not changing height=', height);
+            setHeight(height);
+        }
     }
 
     return (
-        <div className={"resizeArea p-1 pt-3 col-md-4 col-sm-8 mx-auto"}>
+        <div className={"resize-area p-1 pt-3 col-md-4 col-sm-8 mx-auto"}>
             <div className={"row"}>
                 <div className={"col-4"}>
                     <label htmlFor={"rows"}>Rows:&nbsp;</label>
@@ -42,19 +65,12 @@ const ResizeBar = ({height, width, setWidth, setHeight}:Props) => {
                         value={width}
                         onChange={onWidthChange}/>
                 </div>
-                <div className={"col-2"}>
+                <div className={"col-4"}>
                     <button
                         type={"button"}
                         className="resize-btn btn btn-sm btn-primary"
-                        // onClick={onClearClick}
-                    >Save</button>
-                </div>
-                <div className={"col-2"}>
-                    <button
-                        type={"button"}
-                        className="resize-btn btn btn-sm btn-primary"
-                        // onClick={onClearClick}
-                    >Cancel</button>
+                        onClick={onResizeClick}
+                    >Update</button>
                 </div>
             </div>
         </div>

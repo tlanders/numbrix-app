@@ -2,8 +2,8 @@ import {
     GAME_CELL_CHANGE,
     GAME_CHECK_BOARD,
     GAME_CLEAR_BOARD,
-    GAME_RESIZE_BOARD,
     GAME_NEW,
+    GAME_RESIZE_BOARD,
     GAME_START
 } from "./gameActions";
 import {Action, Cell, CellState, Game, GameMode} from "../types";
@@ -118,10 +118,10 @@ const handleCellChange = ({cells, width, height}:Game, index: number, rawNewValu
         if(rawNewValue === '') {
             newVal = '';
             newState = CellState.EMPTY;
-        } else if (isNaN(newVal) || newVal <= 0 || newVal > (width * height)) {
+        } else if (isNaN(newVal) || !/^(\d+)$/.test(rawNewValue) || newVal <= 0 || newVal > (width * height)) {
             newVal = oldVal;
             newState = oldVal === '' ? CellState.EMPTY : CellState.VALID;
-            console.log('handleCellChange - not num: ', rawNewValue);
+            console.log('handleCellChange - not valid num: ', rawNewValue);
         } else {
             newState = CellState.VALID;
             console.log('handleCellChange - is num', newVal);
@@ -289,7 +289,7 @@ export const gameReducer = (state = initialState, action:Action) => {
     }
 }
 
-const handleResizeBoardClick = ({cells, width, height, mode}:Game, newWidth:string, newHeight:string) => {
+const handleResizeBoardClick = (game:Game, newWidth:string, newHeight:string) => {
     console.log("resize board clicked");
     return createEmptyGameState(parseInt(newWidth), parseInt(newHeight), GameMode.SETUP_MODE);
 }

@@ -10,7 +10,7 @@ div.numbrix-status {
   margin-bottom: 10px;
 }
 
-div.resizeArea {
+div.resize-area {
   background-color: #e8e8e8;
   margin: 5px 10px 10px 10px;
 }
@@ -35,10 +35,10 @@ button.status-btn {
 button.resize-btn {
   margin: 0px 10px 10px 10px;
   padding: 5px;
-  min-width: 60px;
+  min-width: 70px;
 }
 
-.resizeArea label {
+.resize-area label {
   min-width: 65px;
 }
 

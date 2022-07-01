@@ -33,5 +33,8 @@ export const checkBoard: NoArgActionCreator = () => ({
 
 export const resizeBoard: ResizeActionCreator = (width, height) => ({
     type: GAME_RESIZE_BOARD,
-    payload: {width, height}
+    payload: {
+        width,
+        height
+    }
 });
