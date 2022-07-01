@@ -71,8 +71,8 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 
 ### Build
 
-docker build -f Dockerfile.prod -t my-first-numbrix-app:latest .
+docker build -f Dockerfile.prod -t numbrix-app:latest .
 
 ### Run
 
-docker run -it -p 80:80 --rm --name my-first-numbrix-app my-first-numbrix-app:latest
+docker run -it -p 80:80 --rm --name numbrix-app numbrix-app:latest
