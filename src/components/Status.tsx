@@ -1,7 +1,8 @@
-import React, {ChangeEventHandler, useState} from 'react';
+import React, {useState} from 'react';
 import {checkBoard, clearBoard, resizeBoard, newGame, startGame} from "../redux/gameActions";
 import {connect} from "react-redux";
 import {Game, GameMode, State} from "../types";
+import ResizeBar from "./ResizeBar";
 
 type ButtonClickEventHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
 
@@ -68,14 +69,16 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
     ) : (
         ''
     );
-    const onWidthChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        console.log('new width=', event.target.value);
-        setWidth(event.target.value);
-    }
-    const onHeightChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        console.log('new height=', event.target.value);
-        setHeight(event.target.value);
-    }
+    const resizeBar = game.mode === GameMode.SETUP_MODE ? (
+        <ResizeBar
+            height={height}
+            width={width}
+            setWidth={setWidth}
+            setHeight={setHeight}
+        />
+    ) : (
+        ''
+    );
 
     return (
         <>
@@ -90,44 +93,7 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
                 </div>
             </div>
             <div className={"row"}>
-                <div className={"configureArea p-1 pt-3 col-md-4 col-sm-8 mx-auto"}>
-                    <div className={"row"}>
-                        <div className={"col-4"}>
-                            <label htmlFor={"rows"}>Rows:&nbsp;</label>
-                            <input
-                                type={"text"}
-                                size={2}
-                                name={"rows"}
-                                maxLength={2}
-                                value={height}
-                                onChange={onHeightChange}/>
-                        </div>
-                        <div className={"col-4"}>
-                            <label htmlFor={"columns"}>Columns:&nbsp;</label>
-                            <input
-                                type={"text"}
-                                size={2}
-                                name={"columns"}
-                                maxLength={2}
-                                value={width}
-                                onChange={onWidthChange}/>
-                        </div>
-                        <div className={"col-2"}>
-                            <button
-                                type={"button"}
-                                className="status-btn btn btn-sm btn-primary"
-                                // onClick={onClearClick}
-                            >Save</button>
-                        </div>
-                        <div className={"col-2"}>
-                            <button
-                                type={"button"}
-                                className="status-btn btn btn-sm btn-primary"
-                                // onClick={onClearClick}
-                            >Cancel</button>
-                        </div>
-                    </div>
-                </div>
+                {resizeBar}
             </div>
         </>
     );
