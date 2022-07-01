@@ -70,9 +70,13 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 ## Docker Notes
 
 ### Build
-
 docker build -f Dockerfile.prod -t numbrix-app:latest .
 
 ### Run
-
 docker run -it -p 80:80 --rm --name numbrix-app numbrix-app:latest
+
+### Tag
+docker tag numbrix-app troylanders/numbrix-app
+
+### Push to dockerhub
+docker push troylanders/numbrix-app
