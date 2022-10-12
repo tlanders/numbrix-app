@@ -56,16 +56,15 @@ const Status: React.FC<Props> = ({onNewGameClick, onClearClick, onInitClick, onC
     ) : (
         ''
     );
-    const resizeBar = game.mode === GameMode.SETUP_MODE ? (
+    const resizeBar = (
         <ResizeBar
             height={height}
             width={width}
+            game={game}
             setWidth={setWidth}
             setHeight={setHeight}
             onResizeClick={onResizeClick(width, height)}
         />
-    ) : (
-        ''
     );
 
     return (

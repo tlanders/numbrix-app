@@ -1,16 +1,17 @@
 import React, {Dispatch, SetStateAction} from "react";
-import {ButtonClickEventHandler, CellState} from "../types";
+import {ButtonClickEventHandler, Game, GameMode} from "../types";
 import {MAX_ROWS_AND_COLUMNS} from "../constants";
 
 type Props = {
     height: string,
     width: string,
+    game: Game,
     setWidth: Dispatch<SetStateAction<string>>,
     setHeight: Dispatch<SetStateAction<string>>,
     onResizeClick: ButtonClickEventHandler
 }
 
-const ResizeBar = ({height, width, setWidth, setHeight, onResizeClick}:Props) => {
+const ResizeBar = ({height, width, game, setWidth, setHeight, onResizeClick}:Props) => {
     const isValidRowColValue = (strVal:string) => {
         if(strVal === '') {
             return true;
@@ -52,7 +53,8 @@ const ResizeBar = ({height, width, setWidth, setHeight, onResizeClick}:Props) =>
                         maxLength={2}
                         className={"resize-input"}
                         value={height}
-                        onChange={onHeightChange}/>
+                        onChange={onHeightChange}
+                        disabled={game.mode != GameMode.SETUP_MODE}/>
                 </div>
                 <div className={"col-4"}>
                     <label htmlFor={"columns"}>Columns:&nbsp;</label>
@@ -63,13 +65,15 @@ const ResizeBar = ({height, width, setWidth, setHeight, onResizeClick}:Props) =>
                         maxLength={2}
                         className={"resize-input"}
                         value={width}
-                        onChange={onWidthChange}/>
+                        onChange={onWidthChange}
+                        disabled={game.mode != GameMode.SETUP_MODE}/>
                 </div>
                 <div className={"col-4"}>
                     <button
                         type={"button"}
                         className="resize-btn btn btn-sm btn-primary"
                         onClick={onResizeClick}
+                        disabled={game.mode != GameMode.SETUP_MODE}
                     >Update</button>
                 </div>
             </div>
