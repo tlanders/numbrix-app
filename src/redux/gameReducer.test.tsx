@@ -7,13 +7,6 @@ describe("get cells to check tests", () => {
     const width = 4;
     const height = 4;
 
-    test("top left corner to fail", () => {
-        const cellsToCheck = getCellsToCheck(0, width, height);
-        expect(cellsToCheck.length).toBe(-1);
-        expect(cellsToCheck).toContain(-1);
-        expect(cellsToCheck).toContain(width);
-    });
-
     test("top left corner", () => {
         const cellsToCheck = getCellsToCheck(0, width, height);
         expect(cellsToCheck.length).toBe(2);
