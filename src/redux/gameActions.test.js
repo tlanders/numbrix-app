@@ -6,10 +6,22 @@ import {
   GAME_CELL_CHANGE, GAME_CHECK_BOARD,
   GAME_CLEAR_BOARD, GAME_NEW,
   GAME_START, newGame,
-  startGame
+  startGame,
+  resizeBoard, GAME_RESIZE_BOARD
 } from "./gameActions";
 
 describe("action creator tests", () => {
+  test('creates valid resize board action', () => {
+    const width = "4";
+    const height = "5";
+    const cellChangeAction = resizeBoard(width, height);
+    expect(cellChangeAction).hasOwnProperty("type");
+    expect(cellChangeAction.type).toEqual(GAME_RESIZE_BOARD);
+    expect(cellChangeAction).hasOwnProperty("payload");
+    expect(cellChangeAction.payload.width).toBe(width);
+    expect(cellChangeAction.payload.height).toBe(height);
+  });
+
   test('creates valid cell change action', () => {
     const cellChangeAction = cellChange(0, "1");
     expect(cellChangeAction).hasOwnProperty("type");
